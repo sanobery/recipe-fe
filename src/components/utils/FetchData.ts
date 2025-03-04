@@ -1,14 +1,14 @@
 export const fetchData = async (
     url: string, 
     method: string = "GET", 
-    body?: any, 
+    body?: Record<string, unknown> | FormData, // Specify type here
     includeCredentials: boolean = true, 
-    isFormData: boolean = false // NEW PARAMETER
+    isFormData: boolean = false 
 ) => {
     try {
         const options: RequestInit = {
             method,
-            credentials: includeCredentials ? "include" : "same-origin", // Include cookies if needed
+            credentials: includeCredentials ? "include" : "same-origin",
         };
 
         // Set headers only if body is JSON (not for FormData)
@@ -20,7 +20,7 @@ export const fetchData = async (
 
         // Handle body based on type
         if (body) {
-            options.body = isFormData ? body : JSON.stringify(body);
+            options.body = isFormData ? (body as FormData) : JSON.stringify(body);
         }
 
         const response = await fetch(url, options);
@@ -31,8 +31,10 @@ export const fetchData = async (
         }
 
         return data;
-    } catch (error: any) {
-        console.error("Fetch error:", error.message);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error("Fetch error:", error.message);
+        }
         throw error;
     }
 };

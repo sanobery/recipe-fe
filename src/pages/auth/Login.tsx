@@ -5,6 +5,7 @@ import CryptoJS from "crypto-js";
 import { setCredentials } from "../../components/app/redux/AuthSlice";
 import { useDispatch } from "react-redux";
 import { fetchData } from "../../components/utils/FetchData";
+import config from "../../components/app/api/config/config";
 
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
 
@@ -21,7 +22,7 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ handleClose, switchToSignup }) => {
     const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
     const dispatch = useDispatch();
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState<string>('');
     const [severity, setSeverity] = useState<AlertColor>('success');
 
 
@@ -33,7 +34,7 @@ const Login: React.FC<LoginProps> = ({ handleClose, switchToSignup }) => {
         try {
             const encryptedPassword = encryptPassword(data.password);
     
-            const response = await fetchData("http://localhost:3500/auth", "POST", {
+            const response = await fetchData(`${config.apiUrl}/auth`, "POST", {
                 email: data.email,
                 password: encryptedPassword,
             });
@@ -44,36 +45,16 @@ const Login: React.FC<LoginProps> = ({ handleClose, switchToSignup }) => {
             setTimeout(() => {
                 handleClose();
             }, 1000);
-        } catch (error: any) {
-            setMessage(error.message);
-            setSeverity("error");
+        } catch (error) {
+            if (error instanceof Error) { 
+                setMessage(error.message); // ✅ Now TypeScript knows it's a string
+                setSeverity("error");
+            } else {
+                setMessage("An unexpected error occurred"); // Fallback for non-Error types
+                setSeverity("error");
+            }
         }
     };
-
-    // const onSubmit: SubmitHandler<LoginFormInputs> = async (data) => {
-    //     const encryptedPassword = encryptPassword(data.password);
-
-    //     const res = await fetch("http://localhost:3500/auth", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ email: data.email, password: encryptedPassword }),
-    //     credentials: 'include',
-    //     });
-
-    //     let response = await res.json();
-    //     console.log(response);
-    //     if (res.status === 200) {
-    //         dispatch(setCredentials({ accessToken: response.accessToken }))
-    //         setMessage(response?.message)
-    //         setSeverity('success')
-    //         setTimeout(() => {
-    //             handleClose();
-    //         }, 3000);
-    //     } else {
-    //         setMessage(response?.message)
-    //         setSeverity('error')
-    //     }
-    // };
 
     return (
         <Box sx={{ maxWidth: 400, mx: "auto", mt: 3, p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "white" }}>

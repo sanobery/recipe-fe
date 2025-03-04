@@ -1,4 +1,4 @@
-import React ,{useState,useEffect} from "react";
+import React ,{useState} from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { TextField, Button, Box, Typography,Alert,AlertColor } from "@mui/material";
 import IngredientSteps from "./IngredientSteps";
@@ -7,21 +7,14 @@ import { selectCurrentUserId } from "../../components/app/redux/AuthSlice";
 import { setRecipes } from "../../components/app/redux/Slice";
 import { RootState } from "../../components/app/redux/Store";
 import { fetchData } from "../../components/utils/FetchData";
+import config from "../../components/app/api/config/config";
+import { RecipeInputs } from "../../components/utils/RecipeInterface";
 
-// Define form data type
-interface RecipeInputs {
-    title: string;
-    ingredients: string[]; 
-    steps: string[]; 
-    image: File|null;
-    preparationTime:Number;
-}
 interface AddRecipeProps {
     handleClose: () => void;
-    switchTo: () => void;
 }
 
-const AddRecipe: React.FC<AddRecipeProps> = ({handleClose,switchTo}) => {
+const AddRecipe: React.FC<AddRecipeProps> = ({handleClose}) => {
     const {
         register,
         handleSubmit,
@@ -34,7 +27,11 @@ const AddRecipe: React.FC<AddRecipeProps> = ({handleClose,switchTo}) => {
     const ingredients = watch("ingredients", []);
     const steps = watch("steps", []);
     const [severity,setSeverity] = useState<AlertColor>("success");
+    const [message,setMessage] = useState<string>("")
     const isFormValid = ingredients.length > 0 && steps.length > 0;
+    const dispatch = useDispatch()
+    const recipes = useSelector((state: RootState) => state.recipe.recipes);
+    const userId = useSelector(selectCurrentUserId) 
 
     // Function to update ingredients in form
     const handleIngredientsChange = (ingredients: string[]) => {
@@ -49,21 +46,23 @@ const AddRecipe: React.FC<AddRecipeProps> = ({handleClose,switchTo}) => {
         const file = event.target.files?.[0]; 
     
         if (file) {
+            const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+            if (!allowedTypes.includes(file.type)) {
+                setMessage("Only JPEG, JPG, or PNG files are allowed");
+                setSeverity("error");
+                return;
+            }
+    
             setValue("image", file);
         }
     };
-
-    const dispatch = useDispatch()
-    const recipes = useSelector((state: RootState) => state.recipe.recipes);
-    const [message,setMessage] = useState("")
-    const userId = useSelector(selectCurrentUserId)    
 
     const onSubmit: SubmitHandler<RecipeInputs> = async (data) => {
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("ingredients", JSON.stringify(data.ingredients));
         formData.append("steps", JSON.stringify(data.steps));
-        formData.append("userId", userId); // No need to stringify `userid`
+        formData.append("userId", String(userId));
         if (data.image instanceof File) {
             formData.append("image", data.image); 
         } else {
@@ -72,7 +71,7 @@ const AddRecipe: React.FC<AddRecipeProps> = ({handleClose,switchTo}) => {
         formData.append("preparationTime", data.preparationTime.toString());
     
         try {
-            const result = await fetchData("http://localhost:3500/recipe", "POST", formData, true, true); // ✅ Pass `true` for `isFormData`
+            const result = await fetchData(`${config.apiUrl}/recipe`, "POST", formData, true, true); // Pass `true` for `isFormData`
             
             if (result) {
                 setMessage(result.message);
@@ -84,28 +83,16 @@ const AddRecipe: React.FC<AddRecipeProps> = ({handleClose,switchTo}) => {
                 setMessage(result.message);
                 setSeverity('error');
             }
-        } catch (error:any) {
-            setMessage(error.message);
-            setSeverity('error');
+        } catch (error) {
+            if (error instanceof Error) { 
+                setMessage(error.message); // ✅ Now TypeScript knows it's a string
+                setSeverity("error");
+            } else {
+                setMessage("An unexpected error occurred"); // Fallback for non-Error types
+                setSeverity("error");
+            }
         }
     };
-    
-    // const [showAlert, setShowAlert] = useState<boolean>(false);
-
-    // const handleClose = () => {
-    //     setShowAlert(false);
-    // };
-    
-    // // Auto-close alert after 3 seconds
-    // useEffect(() => {
-    //     if (showAlert) {
-    //         const timer = setTimeout(() => {
-    //             setShowAlert(false);
-    //         }, 3000);
-    
-    //         return () => clearTimeout(timer); // Cleanup timer on unmount
-    //     }
-    // }, [showAlert]);
     
     return (
         <Box
@@ -135,7 +122,7 @@ const AddRecipe: React.FC<AddRecipeProps> = ({handleClose,switchTo}) => {
             variant="outlined"
             margin="normal"
             {...register("title", {
-                required: "Title is required",
+                required: "Title is required"
             })}
             error={!!errors.title}
             helperText={errors.title?.message}
@@ -152,27 +139,30 @@ const AddRecipe: React.FC<AddRecipeProps> = ({handleClose,switchTo}) => {
             required
             />
 
-<TextField
-    fullWidth
-    label="Preparation Time (in mins)"
-    variant="outlined"
-    margin="normal"
-    type="number"  // Ensures numeric input
-    {...register("preparationTime", {
-        required: "Preparation Time is required",
-        pattern: {
-            value: /^[0-9]+$/, // Ensures only numbers
-            message: "Only numbers are allowed",
-        },
-        min: {
-            value: 1,
-            message: "Preparation time must be at least 1 minute",
-        }
-    })}
-    error={!!errors.preparationTime}
-    helperText={errors.preparationTime?.message}
-/>
-
+            <TextField
+                fullWidth
+                label="Preparation Time (in mins)"
+                variant="outlined"
+                margin="normal"
+                type="number"
+                {...register("preparationTime", {
+                    required: "Preparation Time is required",
+                    pattern: {
+                        value: /^[0-9]+$/, 
+                        message: "Only numbers are allowed",
+                    },
+                    min: {
+                        value: 1,
+                        message: "Preparation time must be at least 1 minute",
+                    },
+                    max: {
+                        value: 100, // Enforces max value
+                        message: "Preparation time cannot exceed 100 minutes",
+                    }
+                })}
+                error={!!errors.preparationTime}
+                helperText={errors.preparationTime?.message}
+            />
 
             {/* Submit Button */}
             <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}  disabled={!isFormValid} >

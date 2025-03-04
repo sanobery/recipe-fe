@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Recipe } from "../../utils/RecipeInterface";
 
-interface Recipe {
+interface RecipeRatingComment {
     _id: string;
     title: string;
     ingredients: string[];
@@ -8,20 +9,31 @@ interface Recipe {
     preparationTime:number;
     image:string,
     userId:{username:string,_id:string}
+    comments:{username:string,_id:string};
+    averageRating:number;
+    ratings:{
+        _id:number,
+        userId:{
+            id:number,
+            username:string
+        }
+    };
 }
 
 interface RecipeState {
     recipes: Recipe[];
-    selectedRecipe: Recipe | null
+    selectedRecipe: RecipeRatingComment | null
     currentUserRecipe: Recipe[],
     searchRecipeByIngredient:Recipe[]
+    recipeId:string|""
 }
 
 const initialState: RecipeState = {
     recipes: [],
     selectedRecipe: null,
     currentUserRecipe: [],
-    searchRecipeByIngredient:[]
+    searchRecipeByIngredient:[],
+    recipeId:""
 };
 
 const recipeSlice = createSlice({
@@ -31,7 +43,10 @@ const recipeSlice = createSlice({
         setRecipes: (state, action: PayloadAction<Recipe[]>) => {
             state.recipes = action.payload;
         },
-        setRecipe:(state,action:PayloadAction<Recipe>) =>{
+        setRecipeId:(state,action:PayloadAction<string>)=>{
+            state.recipeId = action.payload
+        },
+        setRecipe:(state,action:PayloadAction<RecipeRatingComment>) =>{
             state.selectedRecipe = action.payload;
         },
         setCurrentUserRecipe:(state,action:PayloadAction<Recipe[]>) =>{
@@ -43,6 +58,6 @@ const recipeSlice = createSlice({
     }
 });
 
-export const { setRecipes,setRecipe,setCurrentUserRecipe,setSearchRecipeByIngredient } = recipeSlice.actions;
+export const { setRecipes,setRecipe,setCurrentUserRecipe,setSearchRecipeByIngredient,setRecipeId } = recipeSlice.actions;
 
 export default recipeSlice.reducer;

@@ -18,10 +18,10 @@ import config from "../../components/app/api/config/config";
 interface RateCommentProps {
     open: boolean;
     onClose: () => void;
-    type: "rate" | "comment";
+    type: "rate" | "comment" | "delete";
 }
 
-const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {
+const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {    
     const { handleSubmit, control, reset } = useForm({
         defaultValues: {
             type:  type || "rate",  // Default to 'rate'
@@ -32,15 +32,13 @@ const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {
 
     const token = useSelector(selectCurrentToken);
     const userid = useSelector(selectCurrentUserId);
-    const recipe = useSelector((state: RootState) => state.recipe.selectedRecipe);
-    const [message, setMessage] = useState("");
+    const recipeId = useSelector((state: RootState) => state.recipe.recipeId);
+    const [message, setMessage] = useState<string>("");
     const [severity, setSeverity] = useState<AlertColor>("success");
 
     const handleFormSubmit = async (data: { type: string; rate: number | null; comment: string }) => {
-        try {
-            const recipeId = recipe?._id;
-            const payload: Record<string, any> = { userId: userid, recipeId };
-    
+        try {            
+            const payload: Record<string, number|string|null> = { userId: userid, recipeId };
             // Include only relevant data
             if (data.type === "rate" && data.rate !== null) {
                 payload.rate = data.rate;
@@ -52,7 +50,6 @@ const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {
                 return;
             }
     
-            console.log(payload, "Payload before sending");
             const feedback = await fetch(`${config.apiUrl}/recipe/${data.type}`, {
                 method: "POST",
                 body: JSON.stringify({ 
@@ -68,7 +65,6 @@ const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {
             });
 
             const response = await feedback.json();
-            console.log(response);
 
             if (feedback.status === 200) {
                 setSeverity("success");
@@ -81,8 +77,14 @@ const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {
                 setSeverity("error");
                 setMessage(response.message);
             }
-        } catch (e) {
-            console.log(e);
+        } catch (error) {
+            if (error instanceof Error) { 
+                setMessage(error.message); // ✅ Now TypeScript knows it's a string
+                setSeverity("error");
+            } else {
+                setMessage("An unexpected error occurred"); // Fallback for non-Error types
+                setSeverity("error");
+            }
         }
     };
 

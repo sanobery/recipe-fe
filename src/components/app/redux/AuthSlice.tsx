@@ -9,14 +9,14 @@ interface User {
 
 interface CustomJwtPayload extends JwtPayload {
     userinfo?: {
-      userId: number;
+      userId: string;
     };
   }
 
 interface AuthState {
   user: User|null
   token: string | null
-  userid: number|null
+  userid: string|null
 }
 
 // interface UserId {

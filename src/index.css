@@ -1,4 +1,8 @@
 /* Apply only on the login page */
+body {
+  cursor: pointer;
+}
+
 .login-background {
   background-image: url("/public/pngtree-healthy-thai-food-recipes-concept-picture-image_15445097.jpg");
   background-repeat: no-repeat;
@@ -38,4 +42,13 @@
 
 .popup:hover {
   color: blue;
+}
+
+.listItemAlign {
+  display: inline-block;
+  text-align: center;
+}
+
+.box {
+  text-align: center;
 }

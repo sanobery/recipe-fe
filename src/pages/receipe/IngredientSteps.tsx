@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Box,TextField, Button, List, ListItem, IconButton,Typography } from "@mui/material";
+import { Box,TextField, List, ListItem, IconButton,Typography,Alert } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 
 interface IngredientStepsProps {
     onIngredientStepsChange: (ingredients: string[]) => void;
@@ -10,15 +11,36 @@ interface IngredientStepsProps {
 const IngredientSteps: React.FC<IngredientStepsProps> = ({ onIngredientStepsChange,recipename }) => {
     const [ingredient, setIngredient] = useState<string>("");
     const [ingredients, setIngredients] = useState<string[]>([]);
+    const [error,setError] = useState<string>("");
 
     const addIngredient = () => {
-        if (ingredient.trim() !== "") {
-        const newIngredients = [...ingredients, ingredient.trim()];
-        setIngredients(newIngredients);
-        onIngredientStepsChange(newIngredients); // Send updated list to parent
-        setIngredient(""); // Clear input
+        if (ingredient.trim() === "") return; 
+
+        const newItems = ingredient
+                        .split(",")
+                        .map(item => item.trim().replace(/"/g, "")) // Replace all double quotes
+                        .filter(item => item !== "");// Ensure no empty strings
+    
+        // Remove duplicates from the new items
+        const uniqueItems = newItems.filter(item => !ingredients.includes(item));
+
+        if (uniqueItems.length === 0) {
+            setError("All ingredients are already added!");
+            return;
         }
+
+        if (ingredients.includes(ingredient.trim())) {
+            setError(`${ingredient} already added!`);
+            return;
+        }
+    
+        const newIngredients = [...ingredients, ...uniqueItems];
+        setIngredients(newIngredients);
+        onIngredientStepsChange(newIngredients);
+        setIngredient(""); 
+        setError("")
     };
+    
 
     const removeIngredient = (index: number) => {
         const newIngredients = ingredients.filter((_, i) => i !== index);
@@ -29,28 +51,19 @@ const IngredientSteps: React.FC<IngredientStepsProps> = ({ onIngredientStepsChan
     return (
         <>
         <Box display="flex" alignItems="center" gap={2}>
-        <TextField
-            label={recipename}
-            variant="outlined"
-            fullWidth
-            value={ingredient}
-            onChange={(e) => setIngredient(e.target.value)}
-            margin="normal"
-        />
-        <Button 
-            variant="contained"
-            size="small"
-            color="info" 
-            onClick={addIngredient}
-            sx={{ 
-                fontSize: "12px",  // Smaller text
-                padding: "2px 8px", // Less padding
-                minWidth: "80px"  // Reduce width
-            }}
-            >
-            Add {recipename}
-        </Button>
+            <TextField
+                label={recipename}
+                variant="outlined"
+                fullWidth
+                value={ingredient}
+                onChange={(e) => setIngredient(e.target.value)}
+                margin="normal"
+            />
+            <IconButton color="primary" onClick={addIngredient}>
+                <AddIcon />
+            </IconButton>
         </Box>
+        {error && <Alert severity="error">{error}</Alert>}
         {ingredients.length > 0 && (
             <Box
                 sx={{

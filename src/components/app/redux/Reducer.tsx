@@ -1,9 +1,9 @@
 import { Provider } from 'react-redux';
 import {store,persistor} from './Store';
 import { PersistGate } from 'redux-persist/integration/react';
-
+import { ReactNode } from 'react';
 interface ReduxProviderProps{
-    children:any
+    children:ReactNode
 }
 
 const ReduxProvider = ( props:ReduxProviderProps ) => {

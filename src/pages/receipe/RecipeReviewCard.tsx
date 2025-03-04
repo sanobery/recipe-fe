@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useState} from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -16,25 +16,23 @@ import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
 import { Link } from 'react-router-dom';
 import config from '../../components/app/api/config/config'
 import RateComment from './RateComment';
-import StarIcon from "@mui/icons-material/Star";
 import CommentIcon from "@mui/icons-material/Comment";
 import InfoIcon from "@mui/icons-material/Info";
 import { useDispatch, useSelector } from 'react-redux';
-import { setRecipe } from '../../components/app/redux/Slice';
+import { setRecipeId } from '../../components/app/redux/Slice';
 import { Box, Rating, Snackbar } from '@mui/material';
 import { selectCurrentToken } from '../../components/app/redux/AuthSlice';
-
+import  FavoriteIcon  from '@mui/icons-material/Favorite';
+import IngredientList from './IngredientList';
 interface RecipeProps {
-    _id:string;
+    _id: string;
     title: string;
-    image: string;
     ingredients: string[];
-    steps:string[];
+    steps: string[];
     preparationTime:number;
-    userId:{username:string,_id:string};
-    username:string;
-    averageRating:number;
-    onViewChange: (view: "profile" | "addRecipe"|"recipeDetails" |"rateComment", recipe: RecipeProps) => void;
+    image:string,
+    userId:{username:string,_id:string}
+    averageRating:number
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -42,7 +40,7 @@ interface ExpandMoreProps extends IconButtonProps {
 }
 
 const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
+  const { ...other } = props;
   return <IconButton {...other} />;
 })(({theme }) => ({
   marginLeft: 'auto',
@@ -86,15 +84,14 @@ const PopupBody = styled('div')(
   );
 
 export default function RecipeReviewCard(props: RecipeProps) {    
-    const [expanded, setExpanded] = React.useState(false); 
-    const [open, setOpen] = React.useState(false);
-    const [modals, setModals] = React.useState(false);
-    const [anchor, setAnchor] = React.useState<null | HTMLElement>(null);
-    const [popupType, setPopupType] = React.useState<"rate" | "comment">("rate");
+    const [expanded, setExpanded] = useState<boolean>(false); 
+    const [open, setOpen] = useState<boolean>(false);
+    const [modals, setModals] = useState<boolean>(false);
+    const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+    const [popupType, setPopupType] = useState<"rate" | "comment" | "delete">("rate");
     const dispatch = useDispatch()
     const token = useSelector(selectCurrentToken)
-    const [snackbarOpen,setSnackbarOpen] = React.useState(false)
-    console.log(props);
+    const [snackbarOpen,setSnackbarOpen] = useState<boolean>(false)
     
     const handleMoreVertClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchor(event.currentTarget); 
@@ -105,20 +102,21 @@ export default function RecipeReviewCard(props: RecipeProps) {
         setExpanded(!expanded);
     };
 
-    const handleClick = (type: "rate" | "comment",recipe:RecipeProps) => {
+    const handleClick = (type: "rate" | "comment" ,recipe:RecipeProps) => {
         if(!token){
             setSnackbarOpen(true)
         }
         else{
             setPopupType(type);
             setModals(true);
-            dispatch(setRecipe(recipe));
+            dispatch(setRecipeId(recipe?._id));
         }
     };
 
     return (
         <>
         <Card sx={{ mt: { xs: 2, md: 5 }, maxWidth: 345 }}>
+        
         <CardHeader
             avatar={
                 <Avatar sx={{ bgcolor: blue[500] }} aria-label="recipe">
@@ -140,8 +138,9 @@ export default function RecipeReviewCard(props: RecipeProps) {
             </>
             }
             title={props.title}
-            subheader={props.username}
+            subheader={props?.userId?.username}
         />
+
         <Snackbar
             open={snackbarOpen}
             autoHideDuration={2000}
@@ -152,8 +151,8 @@ export default function RecipeReviewCard(props: RecipeProps) {
                 sx: { backgroundColor: "#FF5722", color: "white" }, // Apply styles here
             }}
         />
-        {modals && <RateComment open={modals} onClose={() => { setModals(false); setOpen(false); }} type={popupType} />}
-
+        {modals && <RateComment open={modals} onClose={() => { setModals(false); setOpen(false); }} type={popupType}/>}
+       
         <CardMedia
             component="img"
             sx={{
@@ -163,25 +162,24 @@ export default function RecipeReviewCard(props: RecipeProps) {
             image={props.image ? `${config.apiUrl}/uploads/${props.image}` : "placeholder.jpg"}
             alt="Recipe Image"
         />
+
         <CardContent>
-        <Box display="flex" alignItems="center" mt={1}>
+            <Box display="flex" alignItems="center" mt={1}>
             <Rating value={Math.ceil(props?.averageRating)} readOnly />
             <Typography variant="body2" ml={1}>
                 ({Math.ceil(props?.averageRating)}/5)
             </Typography>
             </Box>
-            {/* <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                Ingredients - {props.ingredients}
-            </Typography> */}
+            <IngredientList ingredients={props?.ingredients} />
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 Preparation Time - {props.preparationTime} mins
             </Typography>
         </CardContent>
+
         <CardActions disableSpacing>
-           
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <IconButton aria-label="rate">
-                    <StarIcon onClick={() => handleClick("rate",props)} sx={{ color: "#FF9800" }}/>
+                    <FavoriteIcon onClick={() => handleClick("rate",props)} sx={{ color: "#FF9800" }}/>
                 </IconButton>
 
                     {/* Comment Icon */}
@@ -196,7 +194,6 @@ export default function RecipeReviewCard(props: RecipeProps) {
                     </Link>
                 </IconButton>
             </Box>
-
             <ExpandMore
             expand={expanded}
             onClick={handleExpandClick}
@@ -206,16 +203,18 @@ export default function RecipeReviewCard(props: RecipeProps) {
             <ExpandMoreIcon />
             </ExpandMore>
         </CardActions>
+
         <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
-            <Typography sx={{ marginBottom: 2 }}>Steps:</Typography>
-            {props.steps.map((step, index) => (
-                <Typography key={index}>
-                    {index + 1}.{step}
+            <Typography variant="h6" sx={{ marginBottom: 2 }}>Steps:</Typography>
+            {props?.steps.map((step, index) => (
+                <Typography variant="body2" key={index}>
+                    {index + 1}. {step}
                 </Typography>
             ))}
             </CardContent>
         </Collapse>
+
         </Card>
         </>
     );

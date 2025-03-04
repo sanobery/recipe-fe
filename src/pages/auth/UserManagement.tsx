@@ -1,8 +1,11 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Alert, AlertColor, TextField, Button, Box, Typography } from "@mui/material";
 import CryptoJS from "crypto-js";
 import { fetchData } from "../../components/utils/FetchData";
+import config from "../../components/app/api/config/config";
+import { useDispatch,useSelector } from "react-redux";
+import { selectCurrentToken, selectCurrentUserId, setUserInfo } from "../../components/app/redux/AuthSlice";
 
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY;
 
@@ -15,16 +18,26 @@ interface SignupInputs {
 
 interface LoginProps {
     handleClose: () => void;
-    switchToLogin: () => void;
+    switchToLogin:() => void;
+    userInfo:keyof typeof userInfoLabels;
 }
   
+const userInfoLabels: Record<"login" | "signup" | "addRecipe" | "updateUser", string> = {
+    login: "Login",
+    signup: "Sign Up",
+    addRecipe: "Add Recipe",
+    updateUser: "Update User"
+};
 
-const Signup: React.FC<LoginProps> = ({ handleClose, switchToLogin }) => {
-    const [message, setMessage] = useState('');
+const Signup: React.FC<LoginProps> = ({ handleClose, switchToLogin, userInfo }) => {
+    const [message, setMessage] = useState<string>('');
     const [severity, setSeverity] = useState<AlertColor>('success');
-
+    const dispatch = useDispatch()
+    const token = useSelector(selectCurrentToken)
+    const userId = useSelector(selectCurrentUserId)
     const {
         register,
+        setValue,
         handleSubmit,
         formState: { errors },
     } = useForm<SignupInputs>();
@@ -36,17 +49,59 @@ const Signup: React.FC<LoginProps> = ({ handleClose, switchToLogin }) => {
     const onSubmit: SubmitHandler<SignupInputs> = async (data) => {
         const encryptedPassword = encryptPassword(data.password);
         try {
-            const response = await fetchData("http://localhost:3500/user", "POST", { ...data, password: encryptedPassword });
+            const requestBody = {
+                ...data,
+                password: encryptedPassword,
+                ...(userInfo === "updateUser" && userId ? { userId } : {}), // Add userId if updating
+            };
+    
+            const response = await fetchData(`${config.apiUrl}/auth/${userInfo}`, "POST", requestBody);
             setMessage(response?.message);
             setSeverity("success");
-            setTimeout(() => {
-                switchToLogin();
-            }, 3000);
-        } catch (error: any) {
-            setMessage(error.message);
-            setSeverity("error");
+            if(userInfo === 'signup'){
+                setTimeout(() => {
+                    switchToLogin();
+                }, 3000);
+            }else{
+                setTimeout(() => {
+                    handleClose();
+                }, 1000);
+            }
+        } catch (error) {
+            if (error instanceof Error) { 
+                setMessage(error.message); // ✅ Now TypeScript knows it's a string
+                setSeverity("error");
+            } else {
+                setMessage("An unexpected error occurred"); // Fallback for non-Error types
+                setSeverity("error");
+            }
         } 
     };
+
+    useEffect(() => {
+           const getUserDetail = async () => {
+                try {
+                    const res = await fetch(`${config.apiUrl}/auth/profile`, {
+                        method: "GET",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization":`Bearer ${token}`,
+                        },
+                    });
+                    const data = await res.json();
+                    dispatch(setUserInfo(data?.userExist));                
+                    setValue("email", data?.userExist.email)
+                    setValue("username", data?.userExist.username)
+                } catch (error) {
+                    if(error instanceof Error){
+                        setMessage("An unexpected error occurred"); // Fallback for non-Error types
+                        setSeverity("error");
+                    }
+                }
+           };
+           getUserDetail();
+       }, [dispatch,setValue,token]);
 
   return (
     <div>
@@ -64,13 +119,12 @@ const Signup: React.FC<LoginProps> = ({ handleClose, switchToLogin }) => {
             {message && <Alert severity={severity}>{message}</Alert>}
             
             <Typography variant="h5" gutterBottom textAlign="center">
-                Sign Up
+               {userInfoLabels[userInfo]}
             </Typography>
             <form onSubmit={handleSubmit(onSubmit)}>
-                {/* Email Field with Validation */}
                 <TextField
                 fullWidth
-                label="Username"
+                label={userInfo === "signup" ? "Enter Username" : ""}
                 variant="outlined"
                 margin="normal"
                 {...register("username", {
@@ -86,7 +140,7 @@ const Signup: React.FC<LoginProps> = ({ handleClose, switchToLogin }) => {
 
                 <TextField
                 fullWidth
-                label="Email"
+                label={userInfo === "signup" ? "Enter Email" : ""}
                 variant="outlined"
                 margin="normal"
                 {...register("email", {
@@ -103,7 +157,7 @@ const Signup: React.FC<LoginProps> = ({ handleClose, switchToLogin }) => {
                 {/* Password Field with Detailed Validation */}
                 <TextField
                 fullWidth
-                label="Password"
+                label="Enter Password"
                 type="password"
                 variant="outlined"
                 margin="normal"
@@ -135,11 +189,10 @@ const Signup: React.FC<LoginProps> = ({ handleClose, switchToLogin }) => {
 
                 {/* Submit Button */}
                 <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-                SignUp
+                    {userInfoLabels[userInfo]}
                 </Button>
             </form>
-            <p>Have an account.<span onClick={switchToLogin} style={{ color: "blue", cursor: "pointer" }}> Log-In</span> to continue</p>
-
+            {userInfo === 'signup' && <p>Have an account.<span onClick={switchToLogin} style={{ color: "blue", cursor: "pointer" }}> Log-In</span> to continue</p>}
         </Box>
     </div>
   );
