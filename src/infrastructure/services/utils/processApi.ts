@@ -5,21 +5,12 @@ const processApi = async <T>(apiCall: () => Promise<{ status: number; data: T }>
             return { success: data, error: null };
         }
         return { success: null, error: data };
-    } catch (error) {
-        if (error instanceof Error) {
-            // Handle known Error types
-            return {
-                success: null,
-                error: error.message,
-            };
-        } else {
-            // Handle unknown error structures
-            return {
-                success: null,
-                error: "An unexpected error occurred",
-            };
-        }
+    } catch (error: any) {
+        return {
+            success: null,
+            error: error.response?.data || error.message || "An unexpected error occurred",
+        };
     }
-}
+};
 
-export default processApi 
+export default processApi;
