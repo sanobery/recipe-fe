@@ -31,7 +31,7 @@ const refresh = async () => {
         }
 
         return newAccessToken
-    } catch (err) {
+    } catch {
         return null // Return null if refresh fails
     }
 }

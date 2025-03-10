@@ -1,3 +1,5 @@
+import { AxiosError } from "axios"
+
 const processApi = async <T>(apiCall: () => Promise<{ status: number; data: T }>) => {
     try {
         const { status, data } = await apiCall()
@@ -5,11 +7,11 @@ const processApi = async <T>(apiCall: () => Promise<{ status: number; data: T }>
             return { success: data, error: null }
         }
         return { success: null, error: data }
-    } catch (error) {
-        if (error instanceof Error) {
+    } catch (error: unknown) {
+        if (error instanceof AxiosError) {
             return {
                 success: null,
-                error: (error as any).response?.data || error.message || "An unexpected error occurred",
+                error: error.response?.data || error.message || "An unexpected error occurred",
             }
         }
         return { success: null, error: "An unexpected error occurred" }

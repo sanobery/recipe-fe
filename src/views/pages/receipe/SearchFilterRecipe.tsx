@@ -51,16 +51,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }))
 
 const SearchFilterRecipe = () => {
-    const [selectedFilter, setSelectedFilter] = useState("")
-    const [selectedValue, setSelectedValue] = useState("")
+    const [selectedFilter, setSelectedFilter] = useState<string>("")
+    const [selectedValue, setSelectedValue] = useState<string>("")
     const dispatch = useDispatch()
-    const [snackbarOpen, setSnackbarOpen] = useState(false)
-    const [message, setMessage] = useState("")
-    const [searchTerm, setSearchTerm] = useState("")
+    const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
+    const [message, setMessage] = useState<string>("")
+    const [searchTerm, setSearchTerm] = useState<string>("")
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(async () => {
             if (searchTerm.trim() === "") {
+                setSearchTerm("")
                 dispatch(setSearchRecipeByIngredient([]))
                 return
             }
@@ -71,6 +72,7 @@ const SearchFilterRecipe = () => {
             }else{
                 setSnackbarOpen(true)
                 setMessage(response?.error?.message)
+                setSearchTerm("")
                 dispatch(setSearchRecipeByIngredient([]))
             }
         }, 500)
@@ -134,7 +136,8 @@ const SearchFilterRecipe = () => {
                     <StyledInputBase
                         placeholder="Search by Ingredient"
                         inputProps={{ "aria-label": "search" }}
-                        sx={{ color: "white" }}
+                        sx={{ color: "white" }}  
+                        value={searchTerm}  // Bind searchTerm to input
                         onChange={searchByIngredient}
                     />
                 </Search>
