@@ -1,70 +1,145 @@
-import { useState } from "react";
-import { Button, Typography, TextField, Paper, Box } from "@mui/material";
-import { RecipeInputs,Recipe } from "../../../utils/RecipeAuthInterface";
-import { fetchData } from "../../../utils/FetchData";
+import { useState } from "react"
+import { Button, Typography, TextField, Paper, Box, Snackbar } from "@mui/material"
+import { RecipeInputs, Recipe } from "../../../utils/RecipeAuthInterface"
+import { useSelector } from "react-redux"
+import { selectCurrentUserId } from "../../../components/redux/AuthSlice"
+import recipeService from "../../../infrastructure/services/api/recipe/RecipeInstance"
 
 const API_URL = import.meta.env.VITE_API_URL
 
 interface EditRecipeProps {
-    recipe: Recipe;
-    onBack: () => void;
+    recipe: Recipe,
+    onBack: () => void,
+    handleClose: () => void
 }
 
-const EditRecipe = ({ recipe, onBack }: EditRecipeProps) => {
+const EditRecipe = ({ recipe, onBack,handleClose }: EditRecipeProps) => {
+    const userId = useSelector(selectCurrentUserId)
+    const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false)
+    const [message, setMessage] = useState<string>("")
+    const [imagePreview, setImagePreview] = useState<string>(recipe?.image ? `${API_URL}/uploads/${recipe.image}` : "")
+
     const [formData, setFormData] = useState<RecipeInputs>({
         title: recipe?.title || "",
-        image: recipe?.image || null ,
         preparationTime: recipe?.preparationTime || 0,
+        image: "",
         ingredients: recipe?.ingredients || [],
         steps: recipe?.steps || [],
-    });
+    })
 
-    // Handle form input changes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: name === "preparationTime" ? Number(value) : value });
-    };
+        const { name, value } = e.target
+        setFormData((prev) => ({
+            ...prev,
+            [name]: name === "preparationTime" ? Number(value) : value,
+        }))
+    }
 
-    // Handle array updates (Ingredients & Steps)
-    const handleArrayChange = (index: number, value: string, field: keyof RecipeInputs) => {
-        const updatedArray = [...formData[field] as string[]];
-        updatedArray[index] = value;
-        setFormData({ ...formData, [field]: updatedArray });
-    };
-
-    // Add a new ingredient/step
-    const addField = (field: keyof RecipeInputs) => {
-        setFormData({ ...formData, [field]: [...(formData[field] as string[]), ""] });
-    };
-
-    // Remove ingredient/step
-    const removeField = (index: number, field: keyof RecipeInputs) => {
-        const updatedArray = (formData[field] as string[]).filter((_, i) => i !== index);
-        setFormData({ ...formData, [field]: updatedArray });
-    };
-
-    // Submit updated data
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();        
-        try {
-            if (!recipe?._id) {
-                console.error("Recipe ID is missing!");
-                return;
+    // Handle file selection & preview update
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            const allowedTypes = ["image/jpeg", "image/jpg", "image/png"]
+            if (!allowedTypes.includes(file.type)) {
+                setMessage("Only JPEG, JPG, or PNG files are allowed")
+                setSnackbarOpen(true)
+                return
             }
-        
-            const updatedData = {
-                ...formData,
-                recipeId: recipe._id, // Include recipeId
-            };
-            const res = await fetchData(`${API_URL}/recipe/update/`, "PUT",updatedData);
-            // onUpdate(updatedRecipe); // Call parent function to update UI
-        } catch (error) {
-            console.error("Error updating recipe:", error);
+
+            const imageUrl = URL.createObjectURL(file)
+            setImagePreview(imageUrl)
+
+            setFormData((prev) => ({
+                ...prev,
+                image: file, // Store the file in state
+            }))
         }
-    };
+    }
+
+    const handleArrayChange = (index: number, value: string, field: keyof RecipeInputs) => {
+        setFormData((prev) => {
+            const updatedArray = [...(prev[field] as string[])]
+            updatedArray[index] = value
+            return { ...prev, [field]: updatedArray }
+        })
+    }
+
+    const addField = (field: keyof RecipeInputs) => {
+        setFormData((prev) => ({ ...prev, [field]: [...(prev[field] as string[]), ""] }))
+    }
+
+    const removeField = (index: number, field: keyof RecipeInputs) => {
+        setFormData((prev) => ({
+            ...prev,
+            [field]: (prev[field] as string[]).filter((_, i) => i !== index),
+        }))
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!recipe?._id) {
+            setMessage("Unexpected error occurred.")
+            setSnackbarOpen(true)
+            return
+        }
+    
+        const formDataToSend = new FormData()
+        let hasChanges = false
+    
+        Object.keys(formData).forEach((key) => {
+            const field = key as keyof RecipeInputs
+            const newValue = formData[field]
+            const oldValue = recipe[field]
+    
+            if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+                hasChanges = true
+    
+                if (Array.isArray(newValue)) {
+                    // Convert array to JSON string
+                    formDataToSend.append(key, JSON.stringify(newValue))
+                } else if (field === "image" && newValue instanceof File) {
+                    formDataToSend.append("image", newValue)
+                } else if (newValue !== null && newValue !== undefined) {
+                    formDataToSend.append(key, newValue.toString())
+                }
+            }
+        })
+    
+        if (!hasChanges) {
+            setMessage("No changes detected.")
+            setSnackbarOpen(true)
+            return
+        }
+    
+        formDataToSend.append("recipeId", recipe._id)
+        formDataToSend.append("userId", String(userId))
+    
+        const response = await recipeService.editRecipe(formDataToSend)
+    
+        if (response?.success) {
+            setMessage(response?.success?.message)
+            setSnackbarOpen(true)
+            setTimeout(() => {
+                handleClose()
+            }, 2000)
+        } else {
+            setMessage(response?.error?.message)
+            setSnackbarOpen(true)
+        }
+    }
     
     return (
         <>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={2000}
+                onClose={() => setSnackbarOpen(false)}
+                message={message}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                ContentProps={{
+                    sx: { backgroundColor: "#FF5722", color: "white" },
+                }}
+            />
             <Button variant="contained" color="secondary" onClick={onBack}>
                 Back to Recipes
             </Button>
@@ -74,92 +149,74 @@ const EditRecipe = ({ recipe, onBack }: EditRecipeProps) => {
                 </Typography>
 
                 <form onSubmit={handleSubmit}>
-                    {/* Title */}
                     <TextField
                         fullWidth
                         label="Title"
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
+                        variant="outlined"
                         margin="normal"
+                        required
                     />
 
-                    {/* Image */}
-                    <Box mt={3}>
-                        <Typography variant="h6">Image</Typography>
-                        <input
-                            type="file"
-                            name="image"
-                            accept="image/*"
-                            onChange={handleChange}
-                        />
-                        {formData.image && (
-                            <Typography variant="body2">{formData?.image}</Typography>
-                        )}
-                    </Box>
-                    {/* Preparation Time */}
+                    <Typography variant="h6">Ingredients</Typography>
+                    {formData.ingredients.map((ingredient, index) => (
+                        <Box key={index} display="flex" gap={2}>
+                            <TextField
+                                fullWidth
+                                value={ingredient}
+                                onChange={(e) => handleArrayChange(index, e.target.value, "ingredients")}
+                                variant="outlined"
+                                margin="normal"
+                            />
+                            <Button onClick={() => removeField(index, "ingredients")}>Remove</Button>
+                        </Box>
+                    ))}
+                    <Button onClick={() => addField("ingredients")}>Add Ingredient</Button>
+
+                    <Typography variant="h6">Steps</Typography>
+                    {formData.steps.map((step, index) => (
+                        <Box key={index} display="flex" gap={2}>
+                            <TextField
+                                fullWidth
+                                value={step}
+                                onChange={(e) => handleArrayChange(index, e.target.value, "steps")}
+                                variant="outlined"
+                                margin="normal"
+                            />
+                            <Button onClick={() => removeField(index, "steps")}>Remove</Button>
+                        </Box>
+                    ))}
+                    <Button onClick={() => addField("steps")}>Add Step</Button>
+
+                    <Typography variant="h6">Recipe Image</Typography>
+                    {imagePreview && (
+                        <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+                            <img src={imagePreview} alt="Recipe" style={{ width: "100%", maxWidth: "400px", borderRadius: "8px" }} />
+                        </Box>
+                    )}
+                    <input type="file" onChange={handleFileChange} />
+
                     <TextField
                         fullWidth
-                        label="Preparation Time (mins)"
-                        type="number"
+                        label="Preparation Time (in mins)"
                         name="preparationTime"
                         value={formData.preparationTime}
                         onChange={handleChange}
+                        variant="outlined"
                         margin="normal"
+                        type="number"
+                        required
                     />
 
-                    {/* Ingredients */}
-                    <Box mt={3}>
-                        <Typography variant="h6">Ingredients</Typography>
-                        {formData.ingredients.map((ingredient, index) => (
-                            <Box key={index} display="flex" alignItems="center">
-                                <TextField
-                                    fullWidth
-                                    value={ingredient}
-                                    onChange={(e) => handleArrayChange(index, e.target.value, "ingredients")}
-                                    margin="dense"
-                                />
-                                <Button onClick={() => removeField(index, "ingredients")} color="error">
-                                    X
-                                </Button>
-                            </Box>
-                        ))}
-                        <Button onClick={() => addField("ingredients")} variant="outlined" sx={{ mt: 1 }}>
-                            Add Ingredient
-                        </Button>
-                    </Box>
-
-                    {/* Steps */}
-                    <Box mt={3}>
-                        <Typography variant="h6">Steps</Typography>
-                        {formData.steps.map((step, index) => (
-                            <Box key={index} display="flex" alignItems="center">
-                                <TextField
-                                    fullWidth
-                                    value={step}
-                                    onChange={(e) => handleArrayChange(index, e.target.value, "steps")}
-                                    margin="dense"
-                                />
-                                <Button onClick={() => removeField(index, "steps")} color="error">
-                                    X
-                                </Button>
-                            </Box>
-                        ))}
-                        <Button onClick={() => addField("steps")} variant="outlined" sx={{ mt: 1 }}>
-                            Add Step
-                        </Button>
-                    </Box>
-
-                    {/* Submit Button */}
-                    <Box display="flex" justifyContent="space-between" mt={4}>
-                        <Button type="submit" variant="contained" color="primary">
-                            Update Recipe
-                        </Button>
-                    </Box>
+                    <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                        Update Recipe
+                    </Button>
                 </form>
             </Paper>
         </>
-    );
-};
+    )
+}
 
-export default EditRecipe;
+export default EditRecipe

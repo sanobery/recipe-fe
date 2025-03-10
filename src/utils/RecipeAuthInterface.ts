@@ -11,9 +11,8 @@ export interface Recipe {
 
 // RecipeInputs reuses Recipe but removes _id, userId, and averageRating, then changes image type
 export type RecipeInputs = Omit<Recipe, "_id" | "userId" | "averageRating" | "image"> & {
-    image: File | null,
+    image: File | "",
 }
-
 export interface LoginFormInputs {
     email: string,
     password: string,
@@ -23,3 +22,6 @@ export interface SignupInputs extends LoginFormInputs {
     username: string,
 }
 
+export interface UserRecipeProps {
+    handleClose: () => void
+}

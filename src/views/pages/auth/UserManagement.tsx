@@ -5,7 +5,6 @@ import CryptoJS from "crypto-js"
 import { useDispatch,useSelector } from "react-redux"
 import { selectCurrentToken, selectCurrentUserId, setUserInfo } from "../../../components/redux/AuthSlice"
 import userService from "../../../infrastructure/services/api/user/UserInstance"
-const SECRET_KEY = import.meta.env.VITE_SECRET_KEY
 import { SignupInputs } from "../../../utils/RecipeAuthInterface"
 
 // Define form data type
@@ -21,6 +20,8 @@ const userInfoLabels: Record<"login" | "signup" | "addRecipe" | "updateUser", st
     addRecipe: "Add Recipe",
     updateUser: "Update User"
 }
+
+const SECRET_KEY = import.meta.env.VITE_SECRET_KEY
 
 const UserManagement: React.FC<LoginProps> = ({ handleClose, switchToLogin, userInfo }) => {
     const [message, setMessage] = useState<string>('')
@@ -81,7 +82,7 @@ const UserManagement: React.FC<LoginProps> = ({ handleClose, switchToLogin, user
         }
     
         fetchUser()
-    }, [token])
+    }, [token,dispatch,setValue])
     
     return (
         <div>

@@ -21,12 +21,12 @@ const RecipeDetail = React.memo(() => {
         else{
             setMessage(response?.error?.message)
         }
-    },[id])
+    },[id,dispatch])
 
 
     useEffect(() => {
         getRecipe()
-    }, [])
+    }, [getRecipe])
 
     return  (
         <>

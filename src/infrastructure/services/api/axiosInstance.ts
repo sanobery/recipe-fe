@@ -32,27 +32,21 @@ const refresh = async () => {
 
         return newAccessToken
     } catch (err) {
-        console.error("Token refresh failed", err)
         return null // Return null if refresh fails
     }
 }
 
 axiosInstance.interceptors.request.use(
     (config) => {      
-        try {
-            const storedAuth = localStorage.getItem("persist:auth")
-            if (storedAuth) {
-                const parsedAuth = JSON.parse(storedAuth)
-                
-                const token = parsedAuth?.token?.replace(/^"|"$/g, '')
-                if (token) {
-                    config.headers.Authorization = `Bearer ${token}`
-                }
+        const storedAuth = localStorage.getItem("persist:auth")
+        if (storedAuth) {
+            const parsedAuth = JSON.parse(storedAuth)
+            
+            const token = parsedAuth?.token?.replace(/^"|"$/g, '')
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`
             }
-        } catch (error) {
-            console.error("Error parsing auth token from localStorage", error)
         }
-
         return config
     }, 
     (error) => Promise.reject(error)
@@ -68,7 +62,6 @@ axiosInstance.interceptors.response.use(
             const newAccessToken = await refresh()
 
             if (!newAccessToken) {
-                console.error("Refresh token failed, logging out user...")
                 return Promise.reject(error) // Reject if refresh fails
             }
 

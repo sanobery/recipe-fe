@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import {jwtDecode,JwtPayload} from "jwt-decode"
 
 interface User {
@@ -6,7 +6,6 @@ interface User {
     username: string,
     email: string
 }
-
 interface CustomJwtPayload extends JwtPayload {
     userinfo?: {
       userId: string
@@ -16,17 +15,11 @@ interface CustomJwtPayload extends JwtPayload {
 interface AuthState {
   user: User|null,
   token: string, 
-  userid: string
 }
-
-// interface UserId {
-// userId: number
-// }
 
 const initialState: AuthState = {
   token: "",
   user:null,
-  userid:""
 }
 
 const authSlice = createSlice({
@@ -35,16 +28,12 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (state, action: PayloadAction<{ accessToken: string }>) => {
         state.token = action.payload.accessToken
-        const decoded: CustomJwtPayload = jwtDecode<CustomJwtPayload>(action.payload.accessToken)
-        state.userid = decoded?.userinfo?.userId || ""
     },
     setUserInfo:(state, action: PayloadAction<User>) => {
         state.user = action.payload
     },
     logout: (state) => {
         state.token = ""
-        state.userid = ""
-        state.user = null
         localStorage.removeItem("persist:auth") 
     },
   },
@@ -53,5 +42,15 @@ const authSlice = createSlice({
 export const { setCredentials, logout,setUserInfo } = authSlice.actions
 export const selectCurrentToken = (state: { auth: AuthState }) => state.auth.token
 export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user
-export const selectCurrentUserId = (state: { auth: AuthState }) => state.auth.userid
+
+export const selectCurrentUserId = createSelector(
+    [selectCurrentToken],
+    (token) => {
+        if (!token) return ""
+        const decoded: CustomJwtPayload = jwtDecode<CustomJwtPayload>(token)
+        return decoded?.userinfo?.userId || ""
+     
+    }
+  )
+
 export default authSlice.reducer

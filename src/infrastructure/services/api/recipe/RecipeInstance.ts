@@ -94,7 +94,20 @@ const recipeService = {
 
         const response = await processApi(() => apiCall(queryParams))
         return response
-    }
+    },
+
+    editRecipe: async (formData: FormData) => {
+        const apiCall = async function (formData: FormData) {
+            const response = await axiosInstance.patch(recipeService.base, formData, {
+                headers: { "Content-Type": "multipart/form-data" }, // Important for FormData
+            })
+            return response
+        }
+    
+        const response = await processApi(() => apiCall(formData))
+        return response
+    },
+
 }
 
 export default recipeService

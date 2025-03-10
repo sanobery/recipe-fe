@@ -87,7 +87,7 @@ const AddRecipe: React.FC<AddRecipeProps> = ({handleClose}) => {
     
     return (
         <>
-          <Snackbar
+        <Snackbar
             open={snackbarOpen}
             autoHideDuration={2000}
             onClose={() => setSnackbarOpen(false)}

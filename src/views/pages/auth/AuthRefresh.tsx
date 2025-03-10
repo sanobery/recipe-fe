@@ -1,14 +1,15 @@
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { setCredentials } from "../../../components/redux/AuthSlice"
-import config from "../../components/app/api/config/config"
+
+const API_URL = import.meta.env.VITE_API_URL
 
 const AuthRefresh =()=>{
     const dispatch = useDispatch()
 
     useEffect(()=>{
         const getRefreshToken = async()=>{
-            const response = await fetch(`${config.apiUrl}/auth/refresh`, {
+            const response = await fetch(`${API_URL}/auth/refresh`, {
                 method: "GET",
                 credentials: "include", // Allows cookies to be sent
             });
