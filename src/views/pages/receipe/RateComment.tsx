@@ -30,7 +30,6 @@ const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {
         },
     })
 
-    // const token = useSelector(selectCurrentToken)
     const userid = useSelector(selectCurrentUserId)
     const recipeId = useSelector((state: RootState) => state.recipe.recipeId)
     const [message, setMessage] = useState<string>("")

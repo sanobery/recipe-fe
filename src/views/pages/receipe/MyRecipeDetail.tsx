@@ -3,7 +3,6 @@ import "react-lazy-load-image-component/src/effects/blur.css"
 import { Grid, Card, CardContent, Typography, CardActionArea } from "@mui/material"
 import { RootState } from "../../../components/redux/Store"
 import { useSelector } from "react-redux"
-// import { useNavigate } from "react-router-dom"
 import { Recipe } from "../../../utils/RecipeAuthInterface"
 import { UserRecipeProps } from "../../../utils/RecipeAuthInterface"
 import EditRecipe from "./EditRecipe"
@@ -13,7 +12,6 @@ const API_URL = import.meta.env.VITE_API_URL
 
 const MyRecipeDetail = (props: UserRecipeProps)=> {
     const recipes = useSelector((state: RootState) => state.recipe.currentUserRecipe)
-    // const navigate = useNavigate()    
     const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null)
 
    
@@ -23,9 +21,7 @@ const MyRecipeDetail = (props: UserRecipeProps)=> {
 
 
     const handleEditClick = (recipe: Recipe) => {
-        // props.handleClose()
         setSelectedRecipe(recipe)
-        // navigate(`/recipe/${recipe?._id}`)
     }
 
     return (

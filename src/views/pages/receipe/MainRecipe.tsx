@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react"
 import recipeService from "../../../infrastructure/services/api/recipe/RecipeInstance"
-// import Grid from "@mui/material/Grid2"
 import { RootState } from "../../../components/redux/Store"
 import { useDispatch, useSelector } from "react-redux"
 import SearchFilterRecipe from "./SearchFilterRecipe"
-// import RecipeReviewCard from "./RecipeReviewCard"
 import { Pagination } from "@mui/material"
 import RecipeSlider from "./RecipeSlider"
-// import { Recipe } from "../../../utils/RecipeAuthInterface"
 import ViewRecipe from "./ViewRecipe"
 import { setRecipes } from "../../../components/redux/Slice"
 
