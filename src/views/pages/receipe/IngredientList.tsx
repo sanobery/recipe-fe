@@ -9,7 +9,7 @@ const IngredientList: React.FC<IngredientListProps> = ({ ingredients }) => {
     const [showFull, setShowFull] = useState<boolean>(false)
 
     // Ensure at least 2 ingredients or fill with empty spaces
-    const ingredient = [ ingredients[0] || "\u00A0",ingredients[1] || "\u00A0"]
+    const ingredient = [ ingredients[0] || "\u00A0"]
 
     return (
         <>
