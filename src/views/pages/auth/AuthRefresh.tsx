@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
-import { setCredentials } from "../../../components/redux/AuthSlice"
+import { setCredentials } from "../../../store/AuthSlice"
 
 const API_URL = import.meta.env.VITE_API_URL
 

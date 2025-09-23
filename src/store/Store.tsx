@@ -8,7 +8,8 @@ import authReducer from "./AuthSlice"
 const persistConfig = {
     key: "auth",  // Only persist the auth state
     storage,       // Saves to localStorage
-    whitelist: ["token"], 
+    whitelist: ["token","userId"], 
+    debug: true // Enable logs
 }
 
 //  Wrap `authReducer` with `persistReducer` to make it persistent

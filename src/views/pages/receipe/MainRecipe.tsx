@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react"
 import recipeService from "../../../infrastructure/services/api/recipe/RecipeInstance"
-import { RootState } from "../../../components/redux/Store"
+import { RootState } from "../../../store/Store"
 import { useDispatch, useSelector } from "react-redux"
 import SearchFilterRecipe from "./SearchFilterRecipe"
 import { Pagination } from "@mui/material"
 import RecipeSlider from "./RecipeSlider"
 import ViewRecipe from "./ViewRecipe"
-import { setRecipes } from "../../../components/redux/Slice"
+import { setRecipes } from "../../../store/Slice"
 
 const MainRecipe = React.memo(() => {
     const dispatch = useDispatch()
@@ -19,7 +19,6 @@ const MainRecipe = React.memo(() => {
     const getRecipes = useCallback(async () => {
         const queryParams = { page, limit: recipesPerPage }
         const response = await recipeService.getAll(queryParams) 
-
         if (response.success) {
             dispatch(setRecipes(response?.success?.recipes))
             setTotalRecipes(response?.success?.total)

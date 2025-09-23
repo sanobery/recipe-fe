@@ -1,7 +1,7 @@
 import { Box, FormControl, InputLabel, Select, MenuItem, Snackbar } from "@mui/material"
 import { useState, useEffect } from "react"
 import {  useDispatch } from "react-redux"
-import { setSearchRecipeByIngredient } from "../../../components/redux/Slice"
+import { setSearchRecipeByIngredient } from "../../../store/Slice"
 import { styled } from "@mui/material/styles"
 import InputBase from "@mui/material/InputBase"
 import SearchIcon from "@mui/icons-material/Search"

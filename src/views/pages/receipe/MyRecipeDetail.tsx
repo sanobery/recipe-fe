@@ -1,10 +1,10 @@
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import "react-lazy-load-image-component/src/effects/blur.css"
 import { Grid, Card, CardContent, Typography, CardActionArea } from "@mui/material"
-import { RootState } from "../../../components/redux/Store"
+import { RootState } from "../../../store/Store"
 import { useSelector } from "react-redux"
-import { Recipe } from "../../../utils/RecipeAuthInterface"
-import { UserRecipeProps } from "../../../utils/RecipeAuthInterface"
+import { Recipe } from "../../../types/RecipeAuthInterface"
+import { UserRecipeProps } from "../../../types/RecipeAuthInterface"
 import EditRecipe from "./EditRecipe"
 import { useState } from "react"
 

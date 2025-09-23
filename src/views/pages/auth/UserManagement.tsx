@@ -3,9 +3,9 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { Alert, AlertColor, TextField, Button, Box, Typography } from "@mui/material"
 import CryptoJS from "crypto-js"
 import { useDispatch,useSelector } from "react-redux"
-import { selectCurrentToken, selectCurrentUserId, setUserInfo } from "../../../components/redux/AuthSlice"
+import { selectCurrentToken, selectCurrentUserId, setUserInfo } from "../../../store/AuthSlice"
 import userService from "../../../infrastructure/services/api/user/UserInstance"
-import { SignupInputs } from "../../../utils/RecipeAuthInterface"
+import { SignupInputs } from "../../../types/RecipeAuthInterface"
 
 // Define form data type
 interface LoginProps {

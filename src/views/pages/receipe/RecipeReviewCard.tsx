@@ -17,14 +17,14 @@ import RateComment from "./RateComment"
 import CommentIcon from "@mui/icons-material/Comment";
 import InfoIcon from "@mui/icons-material/Info";
 import { useDispatch, useSelector } from "react-redux"
-import { setRecipeId } from "../../../components/redux/Slice"
+import { setRecipeId } from "../../../store/Slice"
 import { Box, Rating, Snackbar } from "@mui/material"
-import { selectCurrentToken } from "../../../components/redux/AuthSlice"
+import { selectCurrentToken } from "../../../store/AuthSlice"
 import  FavoriteIcon  from "@mui/icons-material/Favorite"
 import IngredientList from "./IngredientList"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import "react-lazy-load-image-component/src/effects/blur.css"
-import { Recipe } from "../../../utils/RecipeAuthInterface"
+import { Recipe } from "../../../types/RecipeAuthInterface"
 
 const API_URL = import.meta.env.VITE_API_URL
 interface ExpandMoreProps extends IconButtonProps {

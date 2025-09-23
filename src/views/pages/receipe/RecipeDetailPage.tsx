@@ -10,7 +10,7 @@ import StarIcon from "@mui/icons-material/Star"
 import CommentIcon from "@mui/icons-material/Comment"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import { useSelector } from "react-redux"
-import { RootState } from "../../../components/redux/Store"
+import { RootState } from "../../../store/Store"
 import { useNavigate } from "react-router-dom"
 
 const API_URL = import.meta.env.VITE_API_URL

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState,lazy,Suspense } from "react"
 import {
 AppBar,
 Toolbar,
@@ -20,13 +20,15 @@ PersonAdd,
 Close as CloseIcon,
 } from "@mui/icons-material"
 import { styled } from "@mui/material/styles"
-import Login from "./pages/auth/Login"
-import UserManagement from "./pages/auth/UserManagement"
 import { useSelector, useDispatch } from "react-redux"
-import { logout, selectCurrentToken } from "../components/redux/AuthSlice"
-import AddRecipe from "./pages/receipe/AddRecipe"
-import MyRecipe from "./pages/receipe/MyRecipe"
+import { logout, selectCurrentToken } from "../store/AuthSlice"
 import userService from "../infrastructure/services/api/user/UserInstance"
+import { ReactNode } from 'react'
+
+const Login = lazy(()=>import("./pages/auth/Login"))
+const AddRecipe = lazy(()=>import("./pages/receipe/AddRecipe"))
+const MyRecipe = lazy(()=>import("./pages/receipe/MyRecipe"))
+const UserManagement = lazy(()=>import("./pages/auth/UserManagement"))
 
 const ModalBox = styled(Box)(({ theme }) => ({
     position: "absolute",
@@ -63,6 +65,10 @@ const ModalContent = styled("div")(() => ({
     marginBottom:"15px"
 }))
 
+interface ReduxProviderProps{
+    children:ReactNode
+}
+
 const NavbarNew = () => {
     const auth = useSelector(selectCurrentToken)
     const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -72,6 +78,10 @@ const NavbarNew = () => {
     const [message, setMessage] = useState<string>("")
     const open = Boolean(anchorEl)
     const dispatch = useDispatch()
+
+    const LazyLoadWrapper = ( props:ReduxProviderProps) => (
+        <Suspense fallback={<div>Loading...</div>}>{props.children}</Suspense>
+    );
 
     const handleOpen = (type: "login" | "signup" | "addRecipe" | "updateUser"|"myRecipe") => {
         setModalType(type)
@@ -159,11 +169,29 @@ const NavbarNew = () => {
                             <CloseIcon />
                         </IconButton>
                         <ModalContent>
-                        {modalType === "login" && <Login handleClose={handleClose} switchToSignup={() => setModalType("signup")} />}
-                        {modalType === "signup" && <UserManagement handleClose={handleClose} switchToLogin={() => setModalType("login")} userInfo={modalType}/>}
-                        {modalType === "addRecipe" && <AddRecipe handleClose={handleClose}/>}
-                        {modalType === "myRecipe" && <MyRecipe handleClose={handleClose}/>}
-                        {modalType === "updateUser" && <UserManagement handleClose={handleClose} switchToLogin={() => setModalType("login")} userInfo={modalType}/>}
+                            {modalType === "login" && (
+                                <Login handleClose={handleClose} switchToSignup={() => setModalType("signup")} />
+                            )}
+                            {modalType === "signup" && (
+                                <LazyLoadWrapper>
+                                    <UserManagement handleClose={handleClose} switchToLogin={() => setModalType("login")} userInfo={modalType}/>
+                                </LazyLoadWrapper>
+                            )}
+                            {modalType === "addRecipe" && (
+                                <LazyLoadWrapper>
+                                    <AddRecipe handleClose={handleClose}/>
+                                </LazyLoadWrapper>
+                            )}
+                            {modalType === "myRecipe" && (
+                                <LazyLoadWrapper>
+                                    <MyRecipe handleClose={handleClose}/>
+                                </LazyLoadWrapper>
+                            )}
+                            {modalType === "updateUser" && (
+                                <LazyLoadWrapper>
+                                    <UserManagement handleClose={handleClose} switchToLogin={() => setModalType("login")} userInfo={modalType}/>
+                                </LazyLoadWrapper>
+                            )}
                         </ModalContent>
                     </ModalBox>
                 </Fade>

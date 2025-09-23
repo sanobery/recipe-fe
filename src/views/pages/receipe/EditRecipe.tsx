@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { Button, Typography, TextField, Paper, Box, Snackbar } from "@mui/material"
-import { RecipeInputs, Recipe } from "../../../utils/RecipeAuthInterface"
+import { RecipeInputs, Recipe } from "../../../types/RecipeAuthInterface"
 import { useSelector } from "react-redux"
-import { selectCurrentUserId } from "../../../components/redux/AuthSlice"
+import { selectCurrentUserId } from "../../../store/AuthSlice"
 import recipeService from "../../../infrastructure/services/api/recipe/RecipeInstance"
 
 const API_URL = import.meta.env.VITE_API_URL

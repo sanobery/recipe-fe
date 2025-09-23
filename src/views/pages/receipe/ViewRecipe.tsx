@@ -1,6 +1,6 @@
 import React from "react"
 import Grid from "@mui/material/Grid2"
-import { RootState } from "../../../components/redux/Store"
+import { RootState } from "../../../store/Store"
 import { useSelector } from "react-redux"
 import RecipeReviewCard from "./RecipeReviewCard"
 

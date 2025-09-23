@@ -11,8 +11,8 @@ import {
     TextField
 } from "@mui/material"
 import { useSelector } from "react-redux"
-import { selectCurrentUserId } from "../../../components/redux/AuthSlice"
-import { RootState } from "../../../components/redux/Store"
+import { selectCurrentUserId } from "../../../store/AuthSlice"
+import { RootState } from "../../../store/Store"
 import recipeService from "../../../infrastructure/services/api/recipe/RecipeInstance"
 
 interface RateCommentProps {

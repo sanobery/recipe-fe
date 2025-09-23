@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import "react-lazy-load-image-component/src/effects/blur.css"
 import { useSelector } from "react-redux"
-import { RootState } from "../../../components/redux/Store"
+import { RootState } from "../../../store/Store"
 
 const API_URL = import.meta.env.VITE_API_URL
 

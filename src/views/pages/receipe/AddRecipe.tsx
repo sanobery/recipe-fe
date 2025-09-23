@@ -3,16 +3,17 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { TextField, Button, Box, Typography, Snackbar } from "@mui/material"
 import IngredientSteps from "./IngredientSteps"
 import { useDispatch, useSelector } from "react-redux"
-import { selectCurrentUserId } from "../../../components/redux/AuthSlice"
-import { setRecipes } from "../../../components/redux/Slice"
-import { RootState } from "../../../components/redux/Store"
-import { RecipeInputs } from "../../../utils/RecipeAuthInterface"
+import { selectCurrentUserId } from "../../../store/AuthSlice"
+import { setRecipes } from "../../../store/Slice"
+import { RootState } from "../../../store/Store"
+import { RecipeInputs } from "../../../types/RecipeAuthInterface"
 import recipeService from "../../../infrastructure/services/api/recipe/RecipeInstance"
-
+import CustomField from "../../../components/CustomField"
 interface AddRecipeProps {
     handleClose: () => void
 }
 
+/** */
 const AddRecipe: React.FC<AddRecipeProps> = ({handleClose}) => {
     const {
         register,
@@ -113,17 +114,13 @@ const AddRecipe: React.FC<AddRecipeProps> = ({handleClose}) => {
         </Typography>
         <form onSubmit={handleSubmit(onSubmit)}>
             {/* Title Field */}
-            <TextField
-            fullWidth
-            label="Title"
-            variant="outlined"
-            margin="normal"
-            {...register("title", {
-                required: "Title is required"
-            })}
-            error={!!errors.title}
-            helperText={errors.title?.message}
-            />
+            <CustomField
+                label="Title" 
+                name="title"
+                register={register} 
+                errors={errors} 
+                rules={{ required: "Title is required" }} 
+            />           
 
             <IngredientSteps onIngredientStepsChange={handleIngredientsChange}  recipename="Ingredient"/>
 

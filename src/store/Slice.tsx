@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { Recipe } from "../../utils/RecipeAuthInterface"
+import { Recipe } from "../types/RecipeAuthInterface"
 
 interface RecipeRatingComment {
     _id: string,

@@ -1,10 +1,8 @@
 import axios from 'axios'
+import tokenService from './token/tokenInstance'
+import { getApiUrl } from './config'
 
-const baseURL = import.meta.env.VITE_API_URL
-
-const _axios = axios.create({
-    baseURL: baseURL
-})
+const baseURL = getApiUrl()
 
 const axiosInstance = axios.create({
     baseURL: baseURL,
@@ -14,27 +12,6 @@ const axiosInstance = axios.create({
     },
     withCredentials: true,
 })
-
-const refresh = async () => {
-    try {
-        const response = await _axios.post('/auth/refresh', null, { withCredentials: true })
-
-        const newAccessToken = response?.data?.accessToken
-        if (newAccessToken) {
-            // ✅ Store new token in localStorage for future requests
-            const storedAuth = localStorage.getItem("persist:auth")
-            if (storedAuth) {
-                const parsedAuth = JSON.parse(storedAuth)
-                parsedAuth.token = newAccessToken
-                localStorage.setItem("persist:auth", JSON.stringify(parsedAuth))
-            }
-        }
-
-        return newAccessToken
-    } catch {
-        return null // Return null if refresh fails
-    }
-}
 
 axiosInstance.interceptors.request.use(
     (config) => {      
@@ -59,7 +36,7 @@ axiosInstance.interceptors.response.use(
 
         if (error?.response?.status === 403 && !prevRequest?.sent) {
             prevRequest.sent = true // Mark this request to prevent infinite loop
-            const newAccessToken = await refresh()
+            const newAccessToken = await tokenService.refresh()
 
             if (!newAccessToken) {
                 return Promise.reject(error) // Reject if refresh fails

@@ -2,10 +2,10 @@ import React, { useState } from "react"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { TextField, Button, Box, Typography, Alert, AlertColor } from "@mui/material"
 import CryptoJS from "crypto-js"
-import { setCredentials } from "../../../components/redux/AuthSlice"
+import { setCredentials } from "../../../store/AuthSlice"
 import { useDispatch } from "react-redux"
 import userService from "../../../infrastructure/services/api/user/UserInstance"
-import { LoginFormInputs } from "../../../utils/RecipeAuthInterface"
+import { LoginFormInputs } from "../../../types/RecipeAuthInterface"
 
 const SECRET_KEY = import.meta.env.VITE_SECRET_KEY
 interface LoginProps {

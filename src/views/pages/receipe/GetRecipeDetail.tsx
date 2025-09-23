@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux"
-import { setRecipe } from "../../../components/redux/Slice"
+import { setRecipe } from "../../../store/Slice"
 import React,{ useState,useCallback, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import "react-lazy-load-image-component/src/effects/blur.css"

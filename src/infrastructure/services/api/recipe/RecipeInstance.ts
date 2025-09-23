@@ -1,6 +1,6 @@
 import processApi from "../../utils/processApi"
 import axiosInstance from "../axiosInstance"
-import { Recipe } from "../../../../utils/RecipeAuthInterface"
+import { Recipe } from "../../../../types/RecipeAuthInterface"
 
 interface RecipeResponse {
     recipes: Recipe[],
