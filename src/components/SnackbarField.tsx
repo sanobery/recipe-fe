@@ -1,8 +1,8 @@
-import { Alert,AlertColor } from "@mui/material"
+import { Alert } from "@mui/material"
 
 const SnackbarField = ()=>{
     return (
-        <Alert severity={severity}>{message}</Alert>
+        <Alert></Alert>
     )
     
 }
