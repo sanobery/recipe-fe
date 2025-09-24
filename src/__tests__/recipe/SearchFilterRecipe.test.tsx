@@ -1,23 +1,19 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import { Provider } from "react-redux"
-import configureStore from "redux-mock-store"
 import SearchFilterRecipe from "../../views/pages/receipe/SearchFilterRecipe"
 import recipeService from "../../infrastructure/services/api/recipe/RecipeInstance"
+import { mockStore } from "../mocks/MockRecipeData"
 
 jest.mock("../../infrastructure/services/api/recipe/RecipeInstance", () => ({
   search: jest.fn(),
   filter: jest.fn(),
 }))
 
-const mockStore = configureStore([])
 
 describe("SearchFilterRecipe", () => {
-  let store: any
 
-  beforeEach(() => {
-    store = mockStore({})
+    const store = mockStore({})
     store.dispatch = jest.fn()
-  })
 
     it("searches by ingredient and dispatches results", async () => {
     (recipeService.search as jest.Mock).mockResolvedValue({
@@ -55,32 +51,32 @@ describe("SearchFilterRecipe", () => {
             </Provider>
         )
 
-// Open first dropdown
-const filterDropdown = screen.getByLabelText("Filter By")
-fireEvent.mouseDown(filterDropdown)
+        // Open first dropdown
+        const filterDropdown = screen.getByLabelText("Filter By")
+        fireEvent.mouseDown(filterDropdown)
 
-// Wait and click "Rating" option
-const ratingOption = await screen.findByRole("option", { name: "Rating" })
-fireEvent.click(ratingOption)
+        // Wait and click "Rating" option
+        const ratingOption = await screen.findByRole("option", { name: "Rating" })
+        fireEvent.click(ratingOption)
 
-// Open second dropdown
-const ratingDropdown = screen.getByLabelText("Select Rating")
-fireEvent.mouseDown(ratingDropdown)
+        // Open second dropdown
+        const ratingDropdown = screen.getByLabelText("Select Rating")
+        fireEvent.mouseDown(ratingDropdown)
 
-// Click rating value "4"
-const ratingValue = await screen.findByRole("option", { name: "4" })
-fireEvent.click(ratingValue)
+        // Click rating value "4"
+        const ratingValue = await screen.findByRole("option", { name: "4" })
+        fireEvent.click(ratingValue)
 
-// Assert
-await waitFor(() => {
-  expect(recipeService.filter).toHaveBeenCalledWith({ rating: 4 })
-  expect(store.dispatch).toHaveBeenCalledWith(
-    expect.objectContaining({
-      type: "recipe/setSearchRecipeByIngredient",
-      payload: [{ title: "Filtered by Rating" }],
-    })
-  )
-})
+        // Assert
+        await waitFor(() => {
+        expect(recipeService.filter).toHaveBeenCalledWith({ rating: 4 })
+        expect(store.dispatch).toHaveBeenCalledWith(
+            expect.objectContaining({
+            type: "recipe/setSearchRecipeByIngredient",
+            payload: [{ title: "Filtered by Rating" }],
+            })
+        )
+        })
 
 
     })
