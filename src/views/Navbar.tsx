@@ -138,16 +138,16 @@ const NavbarNew = () => {
 
                     {!auth ? (
                         <Box>
-                            <IconButton color="inherit" onClick={() => handleOpen("login")}>
+                            <IconButton color="inherit" onClick={() => handleOpen("login")} aria-label="login">
                                 <Person />
                             </IconButton>
-                            <IconButton color="inherit" onClick={() => handleOpen("signup")}>
+                            <IconButton color="inherit" onClick={() => handleOpen("signup")} aria-label="signup">
                                 <PersonAdd />
                             </IconButton>
                         </Box>
                     ) : (
                         <>
-                            <IconButton color="inherit" onClick={handleMenuOpen}>
+                            <IconButton color="inherit" onClick={handleMenuOpen} aria-label="menuList">
                                 <Person />
                             </IconButton>
                             <Menu anchorEl={anchorEl} open={open} onClick={handleMenuClose}>

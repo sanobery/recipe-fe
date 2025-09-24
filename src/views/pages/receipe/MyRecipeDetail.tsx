@@ -79,7 +79,7 @@ const MyRecipeDetail = (props: UserRecipeProps)=> {
                     ))}
                 </Grid>
             ) : (
-                <Typography color="error" sx={{ textAlign: "center", mt: 2 }}>No Recipe Found!</Typography>
+                <Typography color="error" sx={{ textAlign: "center", mt: 2 }} aria-label="noRecipe">No Recipe Found!</Typography>
             )}
         </>
         )}  

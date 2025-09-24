@@ -25,8 +25,9 @@ import IngredientList from "./IngredientList"
 import { LazyLoadImage } from "react-lazy-load-image-component"
 import "react-lazy-load-image-component/src/effects/blur.css"
 import { Recipe } from "../../../types/RecipeAuthInterface"
+import { getApiUrl } from "../../../infrastructure/services/api/config"
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = getApiUrl()
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
 }
@@ -75,7 +76,7 @@ const PopupBody = styled("div")(
   `,
   )
 
-const RecipeReviewCard = (props: Recipe) =>{    
+const RecipeReviewCard = (props: Recipe) =>{ 
     const [expanded, setExpanded] = useState<boolean>(false) 
     const [open, setOpen] = useState<boolean>(false)
     const [modals, setModals] = useState<boolean>(false)
@@ -147,6 +148,7 @@ const RecipeReviewCard = (props: Recipe) =>{
             ContentProps={{
                 sx: { backgroundColor: "#FF5722", color: "white" }, // Apply styles here
             }}
+            
         />
         {modals && <RateComment open={modals} onClose={() => { setModals(false); setOpen(false); }} type={popupType}/>}
         <LazyLoadImage
@@ -172,13 +174,13 @@ const RecipeReviewCard = (props: Recipe) =>{
 
         <CardActions disableSpacing>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <IconButton aria-label="rate">
-                    <FavoriteIcon onClick={() => handleClick("rate",props)} sx={{ color: "#FF9800" }}/>
+                <IconButton>
+                    <FavoriteIcon aria-label="rate" onClick={() => handleClick("rate",props)} sx={{ color: "#FF9800" }}/>
                 </IconButton>
 
                     {/* Comment Icon */}
-                <IconButton aria-label="comment on recipe">
-                    <CommentIcon  sx={{ color: "#333" ,mt:0.5}} onClick={() => handleClick("comment",props)}/>
+                <IconButton>
+                    <CommentIcon aria-label="comment" sx={{ color: "#333" ,mt:0.5}} onClick={() => handleClick("comment",props)}/>
                 </IconButton>
 
                 {/* View Details Icon */}

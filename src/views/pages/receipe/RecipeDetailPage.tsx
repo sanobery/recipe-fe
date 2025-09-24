@@ -12,9 +12,9 @@ import { LazyLoadImage } from "react-lazy-load-image-component"
 import { useSelector } from "react-redux"
 import { RootState } from "../../../store/Store"
 import { useNavigate } from "react-router-dom"
+import { getApiUrl } from "../../../infrastructure/services/api/config"
 
-const API_URL = import.meta.env.VITE_API_URL
-
+const API_URL = getApiUrl()
 const RecipeDetailPage = ()=>{
     const recipe = useSelector((state: RootState) => state.recipe.selectedRecipe)
     const navigate = useNavigate()  

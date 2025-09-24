@@ -5,6 +5,9 @@ const config: JestConfigWithTsJest = {
   testEnvironment: 'jest-environment-jsdom',
   globals: { 'ts-jest': { tsconfig: 'tsconfig.jest.json' } },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  moduleNameMapper: {
+    "\\.(css|less|scss|sass)$": "identity-obj-proxy"
+  },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transform: { '^.+\\.tsx?$': 'ts-jest' },
   reporters: [

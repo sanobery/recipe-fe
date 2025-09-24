@@ -6,8 +6,9 @@ import { setCredentials } from "../../../store/AuthSlice"
 import { useDispatch } from "react-redux"
 import userService from "../../../infrastructure/services/api/user/UserInstance"
 import { LoginFormInputs } from "../../../types/RecipeAuthInterface"
+import { getSecretKey } from "../../../infrastructure/services/api/config"
 
-const SECRET_KEY = import.meta.env.VITE_SECRET_KEY
+const SECRET_KEY = getSecretKey()
 interface LoginProps {
     handleClose: () => void,
     switchToSignup: () => void
@@ -53,6 +54,7 @@ const Login: React.FC<LoginProps> = ({ handleClose, switchToSignup }) => {
             fullWidth
             label="Email"
             variant="outlined"
+            inputProps={{ "aria-label": "Email" }} 
             margin="normal"
             {...register("email", {
                 required: "Email is required",
@@ -69,6 +71,7 @@ const Login: React.FC<LoginProps> = ({ handleClose, switchToSignup }) => {
             fullWidth
             label="Password"
             type="password"
+            inputProps={{ "aria-label": "Password" }} 
             variant="outlined"
             margin="normal"
             {...register("password", {
