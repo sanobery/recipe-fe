@@ -21,53 +21,53 @@ interface RootStateMock {
 const mockStore = configureStore<Partial<RootStateMock>>() // Use Partial to avoid full typing
 
 describe("ViewRecipe Component", () => {
-  const renderWithStore = (storeData: Partial<RootStateMock>) => {
-    const store = mockStore(storeData)
+    const renderWithStore = (storeData: Partial<RootStateMock>) => {
+        const store = mockStore(storeData)
 
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <ViewRecipe />
-        </MemoryRouter>
-      </Provider>
-    )
-  }
+        render(
+        <Provider store={store}>
+            <MemoryRouter>
+            <ViewRecipe />
+            </MemoryRouter>
+        </Provider>
+        )
+    }
 
-  it("renders RecipeReviewCard when recipes are available", () => {
-    renderWithStore({
-      recipe: {
-        recipes: mockRecipe,
-        searchRecipeByIngredient: [],
-      },
-      auth: { token: null },
+    it("renders RecipeReviewCard when recipes are available", () => {
+        renderWithStore({
+            recipe: {
+            recipes: mockRecipe,
+            searchRecipeByIngredient: [],
+            },
+            auth: { token: null },
+        })
+
+        expect(screen.getByText(/Test Recipe/i)).toBeInTheDocument()
+        expect(screen.queryByText(/No recipes found/i)).not.toBeInTheDocument()
     })
 
-    expect(screen.getByText(/Test Recipe/i)).toBeInTheDocument()
-    expect(screen.queryByText(/No recipes found/i)).not.toBeInTheDocument()
-  })
+    it("renders searched recipes when searchRecipeByIngredient is not empty", () => {
+        renderWithStore({
+            recipe: {
+            recipes: [],
+            searchRecipeByIngredient: mockRecipe,
+            },
+            auth: { token: null },
+        })
 
-  it("renders searched recipes when searchRecipeByIngredient is not empty", () => {
-    renderWithStore({
-      recipe: {
-        recipes: [],
-        searchRecipeByIngredient: mockRecipe,
-      },
-      auth: { token: null },
+        expect(screen.getByText(/Test Recipe/i)).toBeInTheDocument()
+        expect(screen.queryByText(/No recipes found/i)).not.toBeInTheDocument()
     })
 
-    expect(screen.getByText(/Test Recipe/i)).toBeInTheDocument()
-    expect(screen.queryByText(/No recipes found/i)).not.toBeInTheDocument()
-  })
+    it("shows 'No recipes found' when both recipe lists are empty", () => {
+        renderWithStore({
+            recipe: {
+            recipes: [],
+            searchRecipeByIngredient: [],
+            },
+            auth: { token: null },
+        })
 
-  it("shows 'No recipes found' when both recipe lists are empty", () => {
-    renderWithStore({
-      recipe: {
-        recipes: [],
-        searchRecipeByIngredient: [],
-      },
-      auth: { token: null },
+        expect(screen.getByText(/No recipes found/i)).toBeInTheDocument()
     })
-
-    expect(screen.getByText(/No recipes found/i)).toBeInTheDocument()
-  })
 })

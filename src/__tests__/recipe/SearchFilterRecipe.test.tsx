@@ -5,8 +5,8 @@ import recipeService from "../../infrastructure/services/api/recipe/RecipeInstan
 import { mockStore } from "../mocks/MockRecipeData"
 
 jest.mock("../../infrastructure/services/api/recipe/RecipeInstance", () => ({
-  search: jest.fn(),
-  filter: jest.fn(),
+    search: jest.fn(),
+    filter: jest.fn(),
 }))
 
 
@@ -16,28 +16,28 @@ describe("SearchFilterRecipe", () => {
     store.dispatch = jest.fn()
 
     it("searches by ingredient and dispatches results", async () => {
-    (recipeService.search as jest.Mock).mockResolvedValue({
-        success: { recipes: [{ title: "Mock Recipe" }] },
-    })
-
-    render(
-        <Provider store={store}>
-        <SearchFilterRecipe />
-        </Provider>
-    )
-
-    const input = screen.getByPlaceholderText(/search by ingredient/i)
-    fireEvent.change(input, { target: { value: "sugar" } })
-
-    await waitFor(() => {
-        expect(recipeService.search).toHaveBeenCalledWith({ ingredient: "sugar" })
-        expect(store.dispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-            type: "recipe/setSearchRecipeByIngredient",
-            payload: [{ title: "Mock Recipe" }],
+        (recipeService.search as jest.Mock).mockResolvedValue({
+            success: { recipes: [{ title: "Mock Recipe" }] },
         })
+
+        render(
+            <Provider store={store}>
+            <SearchFilterRecipe />
+            </Provider>
         )
-    })
+
+        const input = screen.getByPlaceholderText(/search by ingredient/i)
+        fireEvent.change(input, { target: { value: "sugar" } })
+
+        await waitFor(() => {
+            expect(recipeService.search).toHaveBeenCalledWith({ ingredient: "sugar" })
+            expect(store.dispatch).toHaveBeenCalledWith(
+            expect.objectContaining({
+                type: "recipe/setSearchRecipeByIngredient",
+                payload: [{ title: "Mock Recipe" }],
+            })
+            )
+        })
     })
 
     it("filters by rating", async () => {
@@ -82,22 +82,22 @@ describe("SearchFilterRecipe", () => {
     })
 
     it("shows snackbar on search error", async () => {
-    (recipeService.search as jest.Mock).mockResolvedValue({
-        error: { message: "Ingredient not found" },
-    })
+        (recipeService.search as jest.Mock).mockResolvedValue({
+            error: { message: "Ingredient not found" },
+        })
 
-    render(
-        <Provider store={store}>
-        <SearchFilterRecipe />
-        </Provider>
-    )
+        render(
+            <Provider store={store}>
+            <SearchFilterRecipe />
+            </Provider>
+        )
 
-    const input = screen.getByPlaceholderText(/search by ingredient/i)
-    fireEvent.change(input, { target: { value: "unknown" } })
+        const input = screen.getByPlaceholderText(/search by ingredient/i)
+        fireEvent.change(input, { target: { value: "unknown" } })
 
-    await waitFor(() => {
-        expect(screen.getByText(/ingredient not found/i)).toBeInTheDocument()
-    })
+        await waitFor(() => {
+            expect(screen.getByText(/ingredient not found/i)).toBeInTheDocument()
+        })
     })
 })
 

@@ -48,3 +48,45 @@ export default tseslint.config({
   },
 });
 ```
+
+# Jest Unit Testing in TypeScript
+
+This guide explains how to set up and implement **unit tests using Jest** in a **TypeScript** project.
+
+---
+
+## Table of Contents
+
+1. [Prerequisites](#prerequisites)  
+2. [Installation](#installation)  
+3. [Project Setup](#project-setup)  
+4. [Configuring Jest with TypeScript](#configuring-jest-with-typescript)   
+
+---
+
+## Prerequisites
+
+Make sure you have the following installed:
+
+- Node.js (v14+ recommended)  
+- npm or yarn  
+- TypeScript  
+
+---
+
+## Installation
+
+Install Jest and TypeScript support packages:
+
+```bash
+# Using npm
+npm install --save-dev jest ts-jest @types/jest
+```
+
+```bash 
+npx ts-jest config:init
+```
+"scripts": {
+  "test": "jest",
+  "test:watch": "jest --watch"
+}

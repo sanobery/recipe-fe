@@ -1,4 +1,5 @@
 import { AxiosError } from "axios"
+import { ConstantMessages } from "../../../constants/ConstantMessages";
 
 const processApi = async <T>(apiCall: () => Promise<{ status: number; data: T }>) => {
     try {
@@ -11,10 +12,10 @@ const processApi = async <T>(apiCall: () => Promise<{ status: number; data: T }>
         if (error instanceof AxiosError) {
             return {
                 success: null,
-                error: error.response?.data || error.message || "An unexpected error occurred",
+                error: error.response?.data || error.message || ConstantMessages.UNEXPECTED_ERROR,
             }
         }
-        return { success: null, error: "An unexpected error occurred" }
+        return { success: null, error: ConstantMessages.UNEXPECTED_ERROR }
     }
 }
 

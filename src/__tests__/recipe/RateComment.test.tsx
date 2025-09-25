@@ -4,6 +4,7 @@ import RateComment from "../../views/pages/receipe/RateComment"
 import recipeService from "../../infrastructure/services/api/recipe/RecipeInstance"
 import { MemoryRouter } from "react-router-dom"
 import { mockStore} from "../mocks/MockRecipeData"
+import { getMessage } from "../../constants/ConstantMessages"
 
 jest.mock("../../infrastructure/services/api/recipe/RecipeInstance", () => ({
     feedback: jest.fn(),
@@ -25,79 +26,78 @@ describe("RateComment - Authorized User", () => {
     }
 
     it("submits a valid rating payload", async () => {
-    ;(recipeService.feedback as jest.Mock).mockResolvedValue({
-        success: { message: "Rating submitted successfully" },
-    })
-
-    renderWithStore('rate')
-
-    // select rating = 4
-    const stars = screen.getAllByRole("radio") // MUI Rating renders stars as radios
-    fireEvent.click(stars[3]) // 0-based index, 3 => rating=4
-
-    // click Submit
-    const submitButton = screen.getByRole("button", { name: /submit/i })
-    fireEvent.click(submitButton)
-
-    await waitFor(() => {
-        expect(recipeService.feedback).toHaveBeenCalledWith("rate", {
-        userId: "68d27587596b417988838bef",
-        recipeId: "67d2822161410b166dd89e78",
-        rate: 4,
+        (recipeService.feedback as jest.Mock).mockResolvedValue({
+            success: { message: getMessage('Rating','success') },
         })
-    })
 
-    // check success alert
-    expect(await screen.findByText(/Rating submitted successfully/i)).toBeInTheDocument()
+        renderWithStore('rate')
+
+        // select rating = 4
+        const stars = screen.getAllByRole("radio") // MUI Rating renders stars as radios
+        fireEvent.click(stars[3]) // 0-based index, 3 => rating=4
+
+        // click Submit
+        const submitButton = screen.getByRole("button", { name: /submit/i })
+        fireEvent.click(submitButton)
+
+        await waitFor(() => {
+            expect(recipeService.feedback).toHaveBeenCalledWith("rate", {
+            userId: "68d27587596b417988838bef",
+            recipeId: "67d2822161410b166dd89e78",
+            rate: 4,
+            })
+        })
+
+        // check success alert
+        expect(await screen.findByText(/Rating submitted successfully/i)).toBeInTheDocument()
     })
 
     it("shows error when user already rated the recipe", async () => {
-    (recipeService.feedback as jest.Mock).mockResolvedValue({
-    error: { message: "User has already rated this recipe." },
-    })
+        (recipeService.feedback as jest.Mock).mockResolvedValue({
+        error: { message: "User has already rated this recipe." },
+        })
 
-    renderWithStore('rate')
+        renderWithStore('rate')
 
-    // select rating = 4 again
-    const stars = screen.getAllByRole("radio")
-    fireEvent.click(stars[3]) // index 3 => 4 stars
+        // select rating = 4 again
+        const stars = screen.getAllByRole("radio")
+        fireEvent.click(stars[3]) // index 3 => 4 stars
 
-    // click Submit
-    const submitButton = screen.getByRole("button", { name: /submit/i })
-    fireEvent.click(submitButton)
+        // click Submit
+        const submitButton = screen.getByRole("button", { name: /submit/i })
+        fireEvent.click(submitButton)
 
-    // Wait for the error alert
-    const alert = await screen.findByText(/User has already rated this recipe./i)
-    expect(alert).toBeInTheDocument()
+        // Wait for the error alert
+        const alert = await screen.findByText(/User has already rated this recipe./i)
+        expect(alert).toBeInTheDocument()
     })
 
     it("submits a valid comment payload", async () => {
 
-    (recipeService.feedback as jest.Mock).mockResolvedValue({
-        success: { message: "Comment submitted successfully" },
-    })
-
-    renderWithStore('comment')
-
-    // Type a comment
-    const commentInput = screen.getByRole("textbox")
-    // const commentInput = screen.getByRole("textbox", { name: /your comment/i })
-    fireEvent.change(commentInput, { target: { value: "This recipe is awesome!" } })
-
-    // click Submit
-    const submitButton = screen.getByRole("button", { name: /submit/i })
-    fireEvent.click(submitButton)
-
-    await waitFor(() => {
-        expect(recipeService.feedback).toHaveBeenCalledWith("comment", {
-        userId: "68d27587596b417988838bef",
-        recipeId: "67d2822161410b166dd89e78",
-        comment: "This recipe is awesome!",
+        (recipeService.feedback as jest.Mock).mockResolvedValue({
+            success: { message: getMessage('Comment','success') },
         })
-    })
 
-    // check success alert
-    expect(await screen.findByText(/Comment submitted successfully/i)).toBeInTheDocument()
+        renderWithStore('comment')
+
+        // Type a comment
+        const commentInput = screen.getByRole("textbox")
+        fireEvent.change(commentInput, { target: { value: "This recipe is awesome!" } })
+
+        // click Submit
+        const submitButton = screen.getByRole("button", { name: /submit/i })
+        fireEvent.click(submitButton)
+
+        await waitFor(() => {
+            expect(recipeService.feedback).toHaveBeenCalledWith("comment", {
+            userId: "68d27587596b417988838bef",
+            recipeId: "67d2822161410b166dd89e78",
+            comment: "This recipe is awesome!",
+            })
+        })
+
+        // check success alert
+        expect(await screen.findByText(/Comment submitted successfully/i)).toBeInTheDocument()
     })
 
 })

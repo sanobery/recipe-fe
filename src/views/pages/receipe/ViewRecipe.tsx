@@ -3,6 +3,7 @@ import Grid from "@mui/material/Grid"
 import { RootState } from "../../../store/Store"
 import { useSelector } from "react-redux"
 import RecipeReviewCard from "./RecipeReviewCard"
+import { ConstantMessages } from "../../../constants/ConstantMessages"
 
 const ViewRecipe = React.memo(() => {
   const recipes = useSelector((state: RootState) => state.recipe.recipes)
@@ -26,7 +27,7 @@ const ViewRecipe = React.memo(() => {
         ))
       ) : (
         <Grid item xs={12}>
-          <p style={{ textAlign: "center" }}>No recipes found.</p>
+          <p style={{ textAlign: "center" }}>{ConstantMessages.NO_RECIPE}</p>
         </Grid>
       )}
     </Grid>

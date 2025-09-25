@@ -7,6 +7,7 @@ import { Recipe } from "../../../types/RecipeAuthInterface"
 import { UserRecipeProps } from "../../../types/RecipeAuthInterface"
 import EditRecipe from "./EditRecipe"
 import { useState } from "react"
+import { ConstantMessages } from "../../../constants/ConstantMessages"
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -79,7 +80,7 @@ const MyRecipeDetail = (props: UserRecipeProps)=> {
                     ))}
                 </Grid>
             ) : (
-                <Typography color="error" sx={{ textAlign: "center", mt: 2 }} aria-label="noRecipe">No Recipe Found!</Typography>
+                <Typography color="error" sx={{ textAlign: "center", mt: 2 }} aria-label="noRecipe">{ConstantMessages.NO_RECIPE}</Typography>
             )}
         </>
         )}  

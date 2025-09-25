@@ -122,46 +122,45 @@ const SearchFilterRecipe = () => {
                 </Search>
 
                 <Box display="flex" gap={2} alignItems="center">
-                   <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-  <InputLabel id="filter-by-label">Filter By</InputLabel>
-  <Select
-    labelId="filter-by-label"
-    id="filter-by-select"
-    value={selectedFilter}
-    onChange={handleFilterChange}
-    label="Filter By"
-  >
-    {ingredients.map((ingredient) => (
-      <MenuItem key={ingredient} value={ingredient}>
-        {ingredient}
-      </MenuItem>
-    ))}
-  </Select>
-</FormControl>
+                    <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+                        <InputLabel id="filter-by-label">Filter By</InputLabel>
+                        <Select
+                            labelId="filter-by-label"
+                            id="filter-by-select"
+                            value={selectedFilter}
+                            onChange={handleFilterChange}
+                            label="Filter By"
+                        >
+                            {ingredients.map((ingredient) => (
+                            <MenuItem key={ingredient} value={ingredient}>
+                                {ingredient}
+                            </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
 
-{selectedFilter && selectedFilter !== "none" && (
-  <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
-    <InputLabel id="select-rating-label">
-      {selectedFilter === "rating" ? "Select Rating" : "Select Time"}
-    </InputLabel>
-    <Select
-      labelId="select-rating-label"
-      id="select-rating-select"
-      value={selectedValue}
-      onChange={handleValueChange}
-      label={selectedFilter === "rating" ? "Select Rating" : "Select Time"}
-    >
-      {(selectedFilter === "rating" ? ratingOptions : timeOptions).map(
-        (option) => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        )
-      )}
-    </Select>
-  </FormControl>
-)}
-
+                    {selectedFilter && selectedFilter !== "none" && (
+                    <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+                        <InputLabel id="select-rating-label">
+                        {selectedFilter === "rating" ? "Select Rating" : "Select Time"}
+                        </InputLabel>
+                        <Select
+                        labelId="select-rating-label"
+                        id="select-rating-select"
+                        value={selectedValue}
+                        onChange={handleValueChange}
+                        label={selectedFilter === "rating" ? "Select Rating" : "Select Time"}
+                        >
+                        {(selectedFilter === "rating" ? ratingOptions : timeOptions).map(
+                            (option) => (
+                            <MenuItem key={option} value={option}>
+                                {option}
+                            </MenuItem>
+                            )
+                        )}
+                        </Select>
+                    </FormControl>
+                    )}
                 </Box>
             </Box>
         </>

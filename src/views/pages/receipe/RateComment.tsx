@@ -14,6 +14,7 @@ import { useSelector } from "react-redux"
 import { selectCurrentUserId } from "../../../store/AuthSlice"
 import { RootState } from "../../../store/Store"
 import recipeService from "../../../infrastructure/services/api/recipe/RecipeInstance"
+import { ConstantMessages } from "../../../constants/ConstantMessages"
 
 interface RateCommentProps {
     open: boolean,
@@ -43,7 +44,7 @@ const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {
                 payload.comment = data.comment
             } else {
                 setSeverity("error")
-                setMessage("Please provide a valid rating or comment.")
+                setMessage(ConstantMessages.VALID_RATING_COMMENT)
                 return
             }
             const queryParams= {...payload, userId: userid, recipeId: recipeId}
