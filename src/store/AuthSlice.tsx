@@ -15,13 +15,11 @@ interface CustomJwtPayload extends JwtPayload {
 interface AuthState {
   user: User|null,
   token: string, 
-//   userId: string,
 }
 
 const initialState: AuthState = {
   token: "",
   user:null,
-//   userId: ""
 }
 
 const authSlice = createSlice({
@@ -30,8 +28,6 @@ const authSlice = createSlice({
   reducers: {
     setCredentials: (state, action: PayloadAction<{ accessToken: string }>) => {
         state.token = action.payload.accessToken
-        // const decoded: CustomJwtPayload = jwtDecode<CustomJwtPayload>(state.token)
-        // state.userId = decoded?.userinfo?.userId || ""
     },
     setUserInfo:(state, action: PayloadAction<User>) => {
         state.user = action.payload
@@ -46,7 +42,7 @@ const authSlice = createSlice({
 export const { setCredentials, logout,setUserInfo } = authSlice.actions
 export const selectCurrentToken = (state: { auth: AuthState }) => state?.auth?.token
 export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user
-// export const selectCurrentUserId = (state: { auth: AuthState }) => state.auth.userId
+
 export const selectCurrentUserId = createSelector(
     [selectCurrentToken],
     (token) => {

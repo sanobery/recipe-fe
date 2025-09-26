@@ -1,4 +1,13 @@
+// =============================================
 // Constant Messages
+// =============================================
+// - Centralized repository for reusable messages
+// - Helps maintain consistency across the application
+// - Reduces hardcoding of strings in multiple files
+// - Makes updates easier (change once, reflect everywhere)
+// - Supports better maintainability and localization
+// =============================================
+
 
 export const ConstantMessages = {
   PREP_TIME_NUMBERS_ONLY: "Only numbers are allowed",

@@ -10,7 +10,16 @@ import { SignupInputs } from "../../../types/RecipeAuthInterface"
 import { ConstantMessages, getMessage } from "../../../constants/ConstantMessages"
 import * as z from "zod"
 
-// Define form data type with Zod schema
+// =============================================
+// Define Form Data Type with Zod Schema
+// =============================================
+// - Establishes a strict contract for form input values
+// - Ensures type safety and runtime validation
+// - Prevents invalid or malformed data submissions
+// - Auto-generates TypeScript types from the schema
+// - Enhances maintainability and reduces boilerplate code
+// - Supports clear, centralized validation rules
+// =============================================
 const signupSchema = z.object({
   username: z.string()
     .min(4, { message: getMessage("username", "invalid") })

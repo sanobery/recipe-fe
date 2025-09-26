@@ -100,6 +100,7 @@ const NavbarNew = () => {
         setAnchorEl(null)
     }
 
+    //to Logout
     const handleLogout = async () => {
         const response = await userService.logout()        
         if(response.success){

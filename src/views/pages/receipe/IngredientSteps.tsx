@@ -13,6 +13,7 @@ const IngredientSteps: React.FC<IngredientStepsProps> = ({ onIngredientStepsChan
     const [ingredients, setIngredients] = useState<string[]>([])
     const [error,setError] = useState<string>("")
 
+    // Adding Ingredient in Recipe
     const addIngredient = () => {
         if (ingredient.trim() === "") return 
 

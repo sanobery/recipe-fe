@@ -36,6 +36,16 @@ const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {
     const [message, setMessage] = useState<string>("")
     const [severity, setSeverity] = useState<AlertColor>("success")
 
+    // =============================================
+    // Handle Rating & Comments in Recipes
+    // =============================================
+    // - Allows users to rate a recipe (e.g., 1–5 stars)
+    // - Enables users to add comments/feedback on recipes
+    // - Each rating/comment is linked to the recipe & user
+    // - Validates input (rating range, sanitized comments)
+    // - Stores feedback in the database for future insights
+    // - Enhances user engagement & improves recipe quality
+    // =============================================
     const handleFormSubmit = async (data: { type: string ,rate: number | null, comment: string }) => {
             const payload: Record<string, number|string|null> = { userId: userid, recipeId }
             if (data.type === "rate" && data.rate !== null) {

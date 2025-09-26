@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react"
+import useSWR from "swr"
 import recipeService from "../../../infrastructure/services/api/recipe/RecipeInstance"
 import { RootState } from "../../../store/Store"
 import { useDispatch, useSelector } from "react-redux"
@@ -16,18 +17,20 @@ const MainRecipe = React.memo(() => {
     const searchedRecipes = useSelector((state: RootState) => state.recipe.searchRecipeByIngredient)
     const search = searchedRecipes.length ? false : true
 
-    const getRecipes = useCallback(async () => {
+    const fetcher = async () => {
         const queryParams = { page, limit: recipesPerPage }
-        const response = await recipeService.getAll(queryParams) 
-        if (response.success) {
-            dispatch(setRecipes(response?.success?.recipes))
-            setTotalRecipes(response?.success?.total)
-        } else {
-            dispatch(setRecipes([]))
-            setTotalRecipes(0)
+        const response = await recipeService.getAll(queryParams)
+        return response.success || { recipes: [], total: 0 }
+    }
+
+    const { data } = useSWR(["recipes", page], fetcher)
+
+    const getRecipes = useCallback(async () => {
+        if (data) {
+            dispatch(setRecipes(data.recipes))
+            setTotalRecipes(data.total)
         }
-    }, [page, dispatch])
-    
+    }, [data, dispatch])
 
     useEffect(() => {
         getRecipes()

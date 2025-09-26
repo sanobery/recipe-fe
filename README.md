@@ -90,3 +90,19 @@ npx ts-jest config:init
   "test": "jest",
   "test:watch": "jest --watch"
 }
+
+# Zod & SWR Setup Guide
+
+This guide explains how to install and configure **Zod** (for schema validation) and **SWR** (for data fetching and caching) in your project.
+
+---
+
+## 📦 Installation
+
+Run the following commands to install both libraries:
+
+```bash
+# Using npm
+npm install zod swr
+npm install swr-devtools
+
