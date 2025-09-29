@@ -87,7 +87,7 @@ const SearchFilterRecipe = () => {
         error: searchError,
     } = useSWR(
     debouncedSearchTerm.trim() ? ["search", debouncedSearchTerm] : null,
-    async ([_, term]) => {
+    async ([,term]) => {
         const response = await recipeService.search({ ingredient: term })
         if (response.success) {
             return response.success
@@ -103,7 +103,7 @@ const SearchFilterRecipe = () => {
         selectedFilter && selectedValue
         ? ["filter", selectedFilter, selectedValue]
         : null,
-        async ([_, key, value]) => {
+        async ([, key, value]) => {
         const response = await recipeService.filter({ [key]: value })
          if (response.success) {
             return response.success
