@@ -1,14 +1,14 @@
-import processApi from "../../utils/processApi"
-import axiosInstance from "../axiosInstance"
-import { Recipe } from "../../../../types/RecipeAuthInterface"
+import processApi from '../../utils/processApi'
+import axiosInstance from '../axiosInstance'
+import { Recipe } from '../../../../types/RecipeAuthInterface'
 
 interface RecipeResponse {
-    recipes: Recipe[],
+    recipes: Recipe[]
     total: number
 }
 
 interface QueryParams {
-    [key: string]: string | number | boolean | null | undefined| FormData
+    [key: string]: string | number | boolean | null | undefined | FormData
 }
 
 const recipeService = {
@@ -30,11 +30,11 @@ const recipeService = {
     addRecipe: async (formData: FormData) => {
         const apiCall = async function (formData: FormData) {
             const response = await axiosInstance.post(recipeService.base, formData, {
-                headers: { "Content-Type": "multipart/form-data" }, // Important for FormData
+                headers: { 'Content-Type': 'multipart/form-data' }, // Important for FormData
             })
             return response
         }
-    
+
         const response = await processApi(() => apiCall(formData))
         return response
     },
@@ -59,12 +59,9 @@ const recipeService = {
         return response
     },
 
-
     feedback: async (param: string, queryParams: QueryParams) => {
         const apiCall = async function (queryParams: QueryParams) {
-            const response = await axiosInstance.post(
-                `${recipeService.base}/${param}`,
-                queryParams)
+            const response = await axiosInstance.post(`${recipeService.base}/${param}`, queryParams)
 
             return response
         }
@@ -99,15 +96,14 @@ const recipeService = {
     editRecipe: async (formData: FormData) => {
         const apiCall = async function (formData: FormData) {
             const response = await axiosInstance.patch(recipeService.base, formData, {
-                headers: { "Content-Type": "multipart/form-data" }, // Important for FormData
+                headers: { 'Content-Type': 'multipart/form-data' }, // Important for FormData
             })
             return response
         }
-    
+
         const response = await processApi(() => apiCall(formData))
         return response
     },
-
 }
 
 export default recipeService

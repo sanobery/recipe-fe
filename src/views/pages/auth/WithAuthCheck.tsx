@@ -1,8 +1,8 @@
-import { useSelector } from "react-redux"
-import { Navigate } from "react-router-dom"
-import { ComponentType } from "react"
-import { selectCurrentToken } from "../../../store/AuthSlice"
-import AuthRefresh from "./AuthRefresh"
+import { useSelector } from 'react-redux'
+import { Navigate } from 'react-router-dom'
+import { ComponentType } from 'react'
+import { selectCurrentToken } from '../../../store/AuthSlice'
+import AuthRefresh from './AuthRefresh'
 
 const withAuth = <P extends object>(Component: ComponentType<P>) => {
     return (props: P) => {

@@ -1,7 +1,7 @@
 type GreetingProps = {
-  name: string;
-};
+    name: string
+}
 
 export default function Greetings({ name }: GreetingProps) {
-  return <h1>Hello, {name}!</h1>;
+    return <h1>Hello, {name}!</h1>
 }

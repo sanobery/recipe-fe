@@ -14,23 +14,23 @@ const axiosInstance = axios.create({
 })
 
 axiosInstance.interceptors.request.use(
-    (config) => {      
-        const storedAuth = localStorage.getItem("persist:auth")
+    (config) => {
+        const storedAuth = localStorage.getItem('persist:auth')
         if (storedAuth) {
             const parsedAuth = JSON.parse(storedAuth)
-            
+
             const token = parsedAuth?.token?.replace(/^"|"$/g, '')
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`
             }
         }
         return config
-    }, 
+    },
     (error) => Promise.reject(error)
 )
 
 axiosInstance.interceptors.response.use(
-    response => response,
+    (response) => response,
     async (error) => {
         const prevRequest = error?.config
 

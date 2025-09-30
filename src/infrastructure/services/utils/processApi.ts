@@ -1,5 +1,5 @@
-import { AxiosError } from "axios"
-import { ConstantMessages } from "../../../constants/ConstantMessages";
+import { AxiosError } from 'axios'
+import { ConstantMessages } from '../../../constants/ConstantMessages'
 
 const processApi = async <T>(apiCall: () => Promise<{ status: number; data: T }>) => {
     try {

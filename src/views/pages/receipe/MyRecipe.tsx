@@ -1,11 +1,11 @@
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import {selectCurrentUserId } from "../../../store/AuthSlice"
-import { setCurrentUserRecipe } from "../../../store/Slice"
-import recipeService from "../../../infrastructure/services/api/recipe/RecipeInstance"
-import MyRecipeDetail from "./MyRecipeDetail"
-import { Box } from "@mui/material"
-import useSWR from "swr"
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectCurrentUserId } from '../../../store/AuthSlice'
+import { setCurrentUserRecipe } from '../../../store/Slice'
+import recipeService from '../../../infrastructure/services/api/recipe/RecipeInstance'
+import MyRecipeDetail from './MyRecipeDetail'
+import { Box } from '@mui/material'
+import useSWR from 'swr'
 interface UserRecipeProps {
     handleClose: () => void
 }
@@ -24,8 +24,8 @@ const UserRecipe = (props: UserRecipeProps) => {
     // - Supports better user experience through filtered results
     // =============================================
     const fetcher = async () => {
-        const query = {userId:userId}
-        const response = await recipeService.getUserRecipe(userId,query)
+        const query = { userId: userId }
+        const response = await recipeService.getUserRecipe(userId, query)
         if (response.success) {
             return response.success
         } else {
@@ -34,7 +34,6 @@ const UserRecipe = (props: UserRecipeProps) => {
     }
 
     const { data } = useSWR([userId], fetcher)
-
 
     useEffect(() => {
         const getRecipeByUser = async () => {
@@ -46,10 +45,9 @@ const UserRecipe = (props: UserRecipeProps) => {
         if (userId) getRecipeByUser()
     }, [dispatch, data])
 
-
     return (
-        <Box sx={{ p: 3 }}>          
-            <MyRecipeDetail handleClose={props.handleClose}/>                    
+        <Box sx={{ p: 3 }}>
+            <MyRecipeDetail handleClose={props.handleClose} />
         </Box>
     )
 }

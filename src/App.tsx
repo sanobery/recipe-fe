@@ -1,7 +1,7 @@
-import { Routes, Route, Navigate } from "react-router-dom"
-import RecipeDetail from "./views/pages/receipe/GetRecipeDetail"
-import NavbarNew from "./views/Navbar"
-import MainRecipe from "./views/pages/receipe/MainRecipe"
+import { Routes, Route, Navigate } from 'react-router-dom'
+import RecipeDetail from './views/pages/receipe/GetRecipeDetail'
+import NavbarNew from './views/Navbar'
+import MainRecipe from './views/pages/receipe/MainRecipe'
 
 function App() {
     return (

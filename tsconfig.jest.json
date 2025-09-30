@@ -1,12 +1,12 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "module": "ESNext",              // ✅ allow import.meta
-    "moduleResolution": "node",
-    "isolatedModules": false,        // allow full TS compilation
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx"
-  },
-  "include": ["src", "src/__tests__"]
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "ESNext", // ✅ allow import.meta
+        "moduleResolution": "node",
+        "isolatedModules": false, // allow full TS compilation
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "jsx": "react-jsx"
+    },
+    "include": ["src", "src/__tests__"]
 }

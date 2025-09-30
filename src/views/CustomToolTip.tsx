@@ -1,8 +1,8 @@
-import React from "react"
-import { Tooltip } from "@mui/material"
+import React from 'react'
+import { Tooltip } from '@mui/material'
 
 interface CustomToolTipProps {
-    title: string,
+    title: string
     children: React.ReactNode
 }
 
