@@ -26,4 +26,4 @@ jobs:
                   path: ./dist
 
             - name: 'Deploy to Vercel'
-              run: vercel --prod --token=${{ secrets.RECIPE_FE }} --confirm --cwd ./build
+              run: vercel --prod --token=${{ secrets.RECIPE_FE }} --confirm --cwd ./dist
