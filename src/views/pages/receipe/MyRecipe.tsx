@@ -43,7 +43,7 @@ const UserRecipe = (props: UserRecipeProps) => {
         }
 
         if (userId) getRecipeByUser()
-    }, [dispatch, data])
+    }, [dispatch, data, userId])
 
     return (
         <Box className="padding">
