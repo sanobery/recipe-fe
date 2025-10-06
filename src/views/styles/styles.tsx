@@ -236,7 +236,7 @@ const StyledImageBox = styled(Box)(({ theme }) =>
     })
 )
 
-const StyledCardBox = styled(Box)(({}) =>
+const StyledCardBox = styled(Box)(() =>
     getCommonStyles({ display: 'inline-flex', alignItems: 'center', gap: 1 })
 )
 
@@ -244,7 +244,7 @@ const StyledGrid = styled(Grid)(({ theme }) =>
     getCommonStyles({ justifyContent: 'space-between', marginTop: theme.spacing(2) })
 )
 
-const StyledListItem = styled(ListItem)(({}) =>
+const StyledListItem = styled(ListItem)(() =>
     getCommonStyles({ display: 'flex', justifyContent: 'space-between' })
 )
 
@@ -288,7 +288,7 @@ const StyledShoppingCartIcon = styled(ShoppingCartIcon)(({ theme }) =>
     getStyles({ verticalAlign: 'middle', marginRight: theme.spacing(1), fontSize: '1.2em' })
 )
 
-const StyledMenuBookIcon = styled(MenuBookIcon)(({}) =>
+const StyledMenuBookIcon = styled(MenuBookIcon)(() =>
     getStyles({ verticalAlign: 'middle', fontSize: '1.2em' })
 )
 
@@ -326,12 +326,13 @@ const StyledRecipeDetailBox = styled(Box)(() => ({
     textAlign: 'center',
 }))
 
-const StyledPagination = styled(Pagination)(({theme})=>
+const StyledPagination = styled(Pagination)(({ theme }) =>
     getCommonStyles({
-    display: 'flex',
-    justifyContent: 'center',
-    marginTop: theme.spacing(2)
-}))
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: theme.spacing(2),
+    })
+)
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean
@@ -394,7 +395,11 @@ const StyledIconButton = styled(IconButton)(() => ({
     right: 8,
 }))
 
-const StyledStack = styled(Stack)(() => ({ maxWidth: '800px', marginLeft: 'auto' ,marginRight:'auto'}))
+const StyledStack = styled(Stack)(() => ({
+    maxWidth: '800px',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+}))
 
 const StyledMyRecipe = styled(Typography)(() => ({
     fontWeight: 'bold',

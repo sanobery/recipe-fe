@@ -74,23 +74,23 @@ const RecipeDetailPage = () => {
                     {/* Recipe Details */}
                     <StyledStack spacing={3}>
                         <StyledRecipeDetailBox>
-                        <Typography variant="h6">
-                            Title of Recipe - {recipe?.title || 'Untitled'}
-                        </Typography>
+                            <Typography variant="h6">
+                                Title of Recipe - {recipe?.title || 'Untitled'}
+                            </Typography>
 
-                        <Typography variant="body1" color="text.secondary" className="display">
-                            <StyledRating
-                                value={Math.ceil(recipe?.averageRating || 0)}
-                                me={2}
-                                readOnly
-                            />
-                        </Typography>
+                            <Typography variant="body1" color="text.secondary" className="display">
+                                <StyledRating
+                                    value={Math.ceil(recipe?.averageRating || 0)}
+                                    me={2}
+                                    readOnly
+                                />
+                            </Typography>
 
-                        <Typography variant="body1" color="text.secondary" className="display">
-                            <StyledAccessTimeIcon /> Preparation Time -{' '}
-                            {recipe?.preparationTime || 0} minutes
-                        </Typography>
-</StyledRecipeDetailBox>
+                            <Typography variant="body1" color="text.secondary" className="display">
+                                <StyledAccessTimeIcon /> Preparation Time -{' '}
+                                {recipe?.preparationTime || 0} minutes
+                            </Typography>
+                        </StyledRecipeDetailBox>
                         {/* Ingredients & Instructions */}
 
                         <StyledRecipeDetailBox>
