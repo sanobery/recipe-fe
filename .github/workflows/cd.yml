@@ -23,7 +23,7 @@ jobs:
               uses: actions/download-artifact@v3
               with:
                   name: build
-                  path: ./build
+                  path: ./dist
 
             - name: 'Deploy to Vercel'
               run: vercel --prod --token=${{ secrets.RECIPE_FE }} --confirm --cwd ./build
