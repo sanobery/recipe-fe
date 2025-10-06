@@ -2,7 +2,6 @@ import { useState, lazy, Suspense } from 'react'
 import {
     AppBar,
     Toolbar,
-    Typography,
     IconButton,
     Box,
     Modal,
@@ -18,7 +17,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logout, selectCurrentToken } from '../store/AuthSlice'
 import userService from '../infrastructure/services/api/user/UserInstance'
 import { ReactNode } from 'react'
-import { ModalBox,ModalContent } from './styles/styles'
+import {
+    FlexBox,
+    ModalBox,
+    ModalContent,
+    FlexTypography,
+    StyledIconButton,
+    CustomIconButton,
+} from './styles/styles'
 
 const Login = lazy(() => import('./pages/auth/Login'))
 const AddRecipe = lazy(() => import('./pages/receipe/AddRecipe'))
@@ -75,7 +81,7 @@ const NavbarNew = () => {
     }
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
+        <FlexBox>
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={3000}
@@ -89,18 +95,10 @@ const NavbarNew = () => {
 
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                    >
+                    <CustomIconButton size="large" edge="start" color="inherit" aria-label="menu">
                         <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        RECIPE BLOG
-                    </Typography>
+                    </CustomIconButton>
+                    <FlexTypography variant="h6">RECIPE BLOG</FlexTypography>
 
                     {!auth ? (
                         <Box>
@@ -155,12 +153,9 @@ const NavbarNew = () => {
             >
                 <Fade in={modalOpen}>
                     <ModalBox>
-                        <IconButton
-                            sx={{ position: 'absolute', top: 8, right: 8 }}
-                            onClick={handleClose}
-                        >
+                        <StyledIconButton onClick={handleClose}>
                             <CloseIcon />
-                        </IconButton>
+                        </StyledIconButton>
                         <ModalContent>
                             {modalType === 'login' && (
                                 <Login
@@ -200,7 +195,7 @@ const NavbarNew = () => {
                     </ModalBox>
                 </Fade>
             </Modal>
-        </Box>
+        </FlexBox>
     )
 }
 

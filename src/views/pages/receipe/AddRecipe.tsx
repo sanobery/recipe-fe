@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { TextField, Button, Box, Typography, Snackbar } from '@mui/material'
+import { TextField, Typography, Snackbar } from '@mui/material'
 import IngredientSteps from './IngredientSteps'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUserId } from '../../../store/AuthSlice'
@@ -11,6 +11,8 @@ import { RootState } from '../../../store/Store'
 import recipeService from '../../../infrastructure/services/api/recipe/RecipeInstance'
 import CustomField from '../../../components/CustomField'
 import { ConstantMessages, getMessage } from '../../../constants/ConstantMessages'
+import { StyledBox, SubmitButton } from '../../styles/styles'
+import { CustomSnackbarContent } from '../../styles/styles'
 
 // Zod schema for  adding recipe
 const addRecipeSchema = z.object({
@@ -116,23 +118,12 @@ const AddRecipe: React.FC<AddRecipeProps> = ({ handleClose }) => {
                 open={snackbarOpen}
                 autoHideDuration={2000}
                 onClose={() => setSnackbarOpen(false)}
-                message={message}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                ContentProps={{
-                    sx: { backgroundColor: '#FF5722', color: 'white' },
-                }}
-            />
-            <Box
-                sx={{
-                    maxWidth: 400,
-                    mx: 'auto',
-                    mt: 5,
-                    p: 3,
-                    boxShadow: 3,
-                    borderRadius: 2,
-                    bgcolor: 'white',
-                }}
             >
+                <CustomSnackbarContent message={message} />
+            </Snackbar>
+
+            <StyledBox>
                 <Typography variant="h5" gutterBottom textAlign="center">
                     Add Recipe
                 </Typography>
@@ -167,18 +158,17 @@ const AddRecipe: React.FC<AddRecipeProps> = ({ handleClose }) => {
                         helperText={errors.preparationTime?.message}
                     />
 
-                    <Button
+                    <SubmitButton
                         type="submit"
                         variant="contained"
                         color="primary"
                         fullWidth
-                        sx={{ mt: 2 }}
                         disabled={ingredients.length === 0 || steps.length === 0}
                     >
                         Submit Recipe
-                    </Button>
+                    </SubmitButton>
                 </form>
-            </Box>
+            </StyledBox>
         </>
     )
 }

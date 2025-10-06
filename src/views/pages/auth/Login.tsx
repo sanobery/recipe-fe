@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { TextField, Button, Box, Typography, Alert, AlertColor } from '@mui/material'
+import { TextField, Typography, Alert, AlertColor } from '@mui/material'
 import CryptoJS from 'crypto-js'
 import { setCredentials } from '../../../store/AuthSlice'
 import { useDispatch } from 'react-redux'
 import userService from '../../../infrastructure/services/api/user/UserInstance'
 import { LoginFormInputs } from '../../../types/RecipeAuthInterface'
 import { getSecretKey } from '../../../infrastructure/services/api/config'
+import { ClickableText, StyledBox, SubmitButton } from '../../styles/styles'
 
 const SECRET_KEY = getSecretKey()
 interface LoginProps {
@@ -47,17 +48,7 @@ const Login: React.FC<LoginProps> = ({ handleClose, switchToSignup }) => {
     }
 
     return (
-        <Box
-            sx={{
-                maxWidth: 400,
-                mx: 'auto',
-                mt: 3,
-                p: 3,
-                boxShadow: 3,
-                borderRadius: 2,
-                bgcolor: 'white',
-            }}
-        >
+        <StyledBox>
             <Typography variant="h5" gutterBottom textAlign="center">
                 Login
             </Typography>
@@ -105,18 +96,15 @@ const Login: React.FC<LoginProps> = ({ handleClose, switchToSignup }) => {
                     helperText={errors.password?.message}
                 />
 
-                <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                <SubmitButton type="submit" variant="contained" color="primary" fullWidth>
                     Login
-                </Button>
+                </SubmitButton>
             </form>
             <p>
                 Don't have an account?
-                <span onClick={switchToSignup} style={{ color: 'blue', cursor: 'pointer' }}>
-                    {' '}
-                    Sign Up
-                </span>
+                <ClickableText onClick={switchToSignup}> Sign Up</ClickableText>
             </p>
-        </Box>
+        </StyledBox>
     )
 }
 

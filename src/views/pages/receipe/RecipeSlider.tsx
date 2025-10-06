@@ -2,10 +2,15 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import { useNavigate } from 'react-router-dom'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/Store'
+import {
+    CenteredTextDiv,
+    ResponsiveContainer,
+    FlexCenterDiv,
+    StyledLazyLoadImage,
+} from '../../styles/styles'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -28,24 +33,13 @@ const RecipeSlider = () => {
     }
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '100vh',
-            }}
-        >
-            <div style={{ maxWidth: '90%', width: '600px' }}>
+        <FlexCenterDiv>
+            <ResponsiveContainer>
                 <Slider {...settings}>
                     {recipes?.map((recipe, index) => (
-                        <div
-                            key={index}
-                            style={{ textAlign: 'center' }}
-                            onClick={() => handleClick(recipe?._id)}
-                        >
+                        <CenteredTextDiv key={index} onClick={() => handleClick(recipe?._id)}>
                             <h3>{recipe.title}</h3>
-                            <LazyLoadImage
+                            <StyledLazyLoadImage
                                 src={
                                     recipe.image
                                         ? `${API_URL}/uploads/${recipe.image}`
@@ -54,17 +48,13 @@ const RecipeSlider = () => {
                                 height="500px"
                                 width="100%"
                                 effect="blur" //  Apply blur effect while loading
-                                style={{
-                                    objectFit: 'cover',
-                                    borderRadius: '10px',
-                                }}
                             />
                             <p>Preparation Time: {recipe.preparationTime} mins</p>
-                        </div>
+                        </CenteredTextDiv>
                     ))}
                 </Slider>
-            </div>
-        </div>
+            </ResponsiveContainer>
+        </FlexCenterDiv>
     )
 }
 

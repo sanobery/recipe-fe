@@ -1,80 +1,41 @@
 import { useState } from 'react'
-import { styled } from '@mui/material/styles'
-import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import Collapse from '@mui/material/Collapse'
-import Avatar from '@mui/material/Avatar'
-import IconButton, { IconButtonProps } from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import { blue } from '@mui/material/colors'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup'
 import { Link, useNavigate } from 'react-router-dom'
 import RateComment from './RateComment'
-import CommentIcon from '@mui/icons-material/Comment'
-import InfoIcon from '@mui/icons-material/Info'
 import { useDispatch, useSelector } from 'react-redux'
 import { setRecipeId } from '../../../store/Slice'
-import { Box, Rating, Snackbar } from '@mui/material'
+import { Box, IconButton, Rating, Snackbar } from '@mui/material'
 import { selectCurrentToken } from '../../../store/AuthSlice'
-import FavoriteIcon from '@mui/icons-material/Favorite'
 import IngredientList from './IngredientList'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css'
 import { Recipe } from '../../../types/RecipeAuthInterface'
 import { getApiUrl } from '../../../infrastructure/services/api/config'
+import {
+    CustomSnackbarContent,
+    PopupBody,
+    ResponsiveCard,
+    StyledAvatar,
+    StyledCardBox,
+    StyledCardContent,
+    StyledLazyLoadImage,
+    StyledTypography,
+} from '../../styles/styles'
+import { ConstantMessages } from '../../../constants/ConstantMessages'
+import {
+    StyledCommentIcon,
+    StyledFavoriteIcon,
+    StyledInfoIcon,
+    ExpandMore,
+} from '../../styles/styles'
 
 const API_URL = getApiUrl()
-interface ExpandMoreProps extends IconButtonProps {
-    expand: boolean
-}
-
-const ExpandMore = styled((props: ExpandMoreProps) => {
-    const { ...other } = props
-    return <IconButton {...other} />
-})(({ theme }) => ({
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
-    variants: [
-        {
-            props: ({ expand }) => !expand,
-            style: {
-                transform: 'rotate(0deg)',
-            },
-        },
-        {
-            props: ({ expand }) => !!expand,
-            style: {
-                transform: 'rotate(180deg)',
-            },
-        },
-    ],
-}))
-
-const PopupBody = styled('div')(
-    ({ theme }) => `
-    width: max-content;
-    padding: 12px 16px;
-    margin: 8px;
-    border-radius: 8px;
-    border: 1px solid #fff;
-    background-color:#fff};
-    box-shadow: ${
-        theme.palette.mode === 'dark'
-            ? `0px 4px 8px rgb(0 0 0 / 0.7)`
-            : `0px 4px 8px rgb(0 0 0 / 0.1)`
-    };
-    font-family: "IBM Plex Sans", sans-serif;
-    font-weight: 500;
-    font-size: 0.875rem;
-    z-index: 1;
-  `
-)
 
 const RecipeReviewCard = (props: Recipe) => {
     const [expanded, setExpanded] = useState<boolean>(false)
@@ -112,12 +73,12 @@ const RecipeReviewCard = (props: Recipe) => {
 
     return (
         <>
-            <Card sx={{ mt: { xs: 2, md: 5 }, maxWidth: 345 }}>
+            <ResponsiveCard>
                 <CardHeader
                     avatar={
-                        <Avatar sx={{ bgcolor: blue[500] }} aria-label="recipe">
+                        <StyledAvatar aria-label="recipe">
                             {props?.userId?.username.charAt(0).toUpperCase()}
-                        </Avatar>
+                        </StyledAvatar>
                     }
                     action={
                         <>
@@ -154,12 +115,11 @@ const RecipeReviewCard = (props: Recipe) => {
                     open={snackbarOpen}
                     autoHideDuration={2000}
                     onClose={() => setSnackbarOpen(false)}
-                    message="Please login first"
                     anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    ContentProps={{
-                        sx: { backgroundColor: '#FF5722', color: 'white' }, // Apply styles here
-                    }}
-                />
+                >
+                    <CustomSnackbarContent message={ConstantMessages.LOGIN_FIRST} />
+                </Snackbar>
+
                 {modals && (
                     <RateComment
                         open={modals}
@@ -170,12 +130,11 @@ const RecipeReviewCard = (props: Recipe) => {
                         type={popupType}
                     />
                 )}
-                <LazyLoadImage
+                <StyledLazyLoadImage
                     src={props.image ? `${API_URL}/uploads/${props.image}` : 'placeholder.jpg'}
                     height="200px"
                     width="300px"
                     effect="blur" //  Apply blur effect while loading
-                    style={{ objectFit: 'cover' }}
                     onClick={() => handleImgClick(props?._id)}
                 />
                 <CardContent>
@@ -186,31 +145,24 @@ const RecipeReviewCard = (props: Recipe) => {
                         </Typography>
                     </Box>
                     <IngredientList ingredients={props?.ingredients} />
-                    <Typography variant="body2" sx={{
-    color: 'text.secondary',
-    textAlign: 'center',       // centers the text inside
-    display: 'block',          // ensures it behaves like a block element
-    width: '100%',             // spans full width of parent
-  }}>
+                    <StyledTypography variant="body2">
                         Preparation Time - {props.preparationTime} mins
-                    </Typography>
+                    </StyledTypography>
                 </CardContent>
 
                 <CardActions disableSpacing>
-                    <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 1 }}>
+                    <StyledCardBox>
                         <IconButton>
-                            <FavoriteIcon
+                            <StyledFavoriteIcon
                                 aria-label="rate"
                                 onClick={() => handleClick('rate', props)}
-                                sx={{ color: '#FF9800' }}
                             />
                         </IconButton>
 
                         {/* Comment Icon */}
                         <IconButton>
-                            <CommentIcon
+                            <StyledCommentIcon
                                 aria-label="comment"
-                                sx={{ color: '#333', mt: 0.5 }}
                                 onClick={() => handleClick('comment', props)}
                             />
                         </IconButton>
@@ -218,10 +170,10 @@ const RecipeReviewCard = (props: Recipe) => {
                         {/* View Details Icon */}
                         <IconButton aria-label="view details">
                             <Link to={`/recipe/${props._id}`} className="link">
-                                <InfoIcon sx={{ color: 'blue', mt: 1 }} />
+                                <StyledInfoIcon />
                             </Link>
                         </IconButton>
-                    </Box>
+                    </StyledCardBox>
                     <ExpandMore
                         expand={expanded}
                         onClick={handleExpandClick}
@@ -233,22 +185,16 @@ const RecipeReviewCard = (props: Recipe) => {
                 </CardActions>
 
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
-                    <CardContent sx={{
-    color: 'text.secondary',
-    textAlign: 'center',       // centers the text inside
-    display: 'block',          // ensures it behaves like a block element
-  }}>
-                        <Typography variant="h6">
-                            Steps:
-                        </Typography>
+                    <StyledCardContent>
+                        <Typography variant="h6">Steps:</Typography>
                         {props?.steps.map((step, index) => (
                             <Typography variant="body2" key={index}>
                                 {index + 1}. {step}
                             </Typography>
                         ))}
-                    </CardContent>
+                    </StyledCardContent>
                 </Collapse>
-            </Card>
+            </ResponsiveCard>
         </>
     )
 }

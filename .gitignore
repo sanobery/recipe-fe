@@ -26,3 +26,4 @@ dist-ssr
 .env
 src/infrastructure/config/index.js
 reports/
+coverage/

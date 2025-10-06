@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Box, TextField, List, ListItem, IconButton, Typography, Alert } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
+import { StyledIngredientBox } from '../../styles/styles'
 
 interface IngredientStepsProps {
     onIngredientStepsChange: (ingredients: string[]) => void
@@ -68,17 +69,7 @@ const IngredientSteps: React.FC<IngredientStepsProps> = ({
             </Box>
             {error && <Alert severity="error">{error}</Alert>}
             {ingredients.length > 0 && (
-                <Box
-                    sx={{
-                        mt: 2, // Margin top
-                        p: 2, // Padding
-                        border: '1px solid #ccc', // Border
-                        borderRadius: '8px', // Rounded corners
-                        backgroundColor: '#f9f9f9', // Light background color
-                        maxWidth: 400, // Limit width
-                        boxShadow: 2, // Add slight shadow
-                    }}
-                >
+                <StyledIngredientBox>
                     <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                         List of {recipename}:
                     </Typography>
@@ -101,7 +92,7 @@ const IngredientSteps: React.FC<IngredientStepsProps> = ({
                             </ListItem>
                         ))}
                     </List>
-                </Box>
+                </StyledIngredientBox>
             )}
         </>
     )

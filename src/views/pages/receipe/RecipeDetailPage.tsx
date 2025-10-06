@@ -1,6 +1,5 @@
 import {
     Box,
-    Stack,
     Typography,
     List,
     ListItem,
@@ -8,20 +7,28 @@ import {
     ListItemIcon,
     Divider,
     IconButton,
-    Rating,
 } from '@mui/material'
-import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import MenuBookIcon from '@mui/icons-material/MenuBook'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import StarIcon from '@mui/icons-material/Star'
-import CommentIcon from '@mui/icons-material/Comment'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../store/Store'
 import { useNavigate } from 'react-router-dom'
 import { getApiUrl } from '../../../infrastructure/services/api/config'
+import {
+    CustomLazyLoadImage,
+    StyledAccessTimeIcon,
+    StyledCommentIcon,
+    StyledImageBox,
+    StyledListItem,
+    StyledMenuBookIcon,
+    StyledRating,
+    StyledRecipeBox,
+    StyledRecipeDetailBox,
+    StyledShoppingCartIcon,
+    StyledStack,
+    StyledStarIcon,
+    StyledTypographyMargin,
+} from '../../styles/styles'
 
 const API_URL = getApiUrl()
 const RecipeDetailPage = () => {
@@ -39,126 +46,62 @@ const RecipeDetailPage = () => {
     return (
         <>
             {recipe ? (
-                <Box sx={{ p: 3, cursor: 'pointer' }}>
+                <Box className="padding pointer">
                     {/* Header Section */}
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 1,
-                            justifyContent: 'space-between',
-                        }}
-                    >
-                        <Typography
-                            variant="h5"
-                            sx={{
-                                fontWeight: 'bold',
-                                textAlign: 'center',
-                                flexGrow: 1,
-                            }}
-                        >
+                    <StyledRecipeBox>
+                        <Typography variant="h5" className="flex textStyle">
                             Created By - {recipe?.userId?.username?.toUpperCase() || 'Unknown'}
                         </Typography>
                         <IconButton onClick={() => navigate(-1)}>
                             <ArrowBackIcon fontSize="large" />
                         </IconButton>
-                    </Box>
+                    </StyledRecipeBox>
 
                     <Divider />
 
                     {/* Centered Image */}
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            my: 3,
-                        }}
-                    >
-                        <LazyLoadImage
+                    <StyledImageBox>
+                        <CustomLazyLoadImage
                             src={
                                 recipe.image
                                     ? `${API_URL}/uploads/${recipe.image}`
                                     : 'placeholder.jpg'
                             }
                             effect="blur" //  Apply blur effect while loading
-                            style={{
-                                width: '100%',
-                                maxWidth: '400px',
-                                borderRadius: '10px',
-                                boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
-                            }}
                         />
-                    </Box>
+                    </StyledImageBox>
 
                     {/* Recipe Details */}
-                    <Stack spacing={3} sx={{ maxWidth: '800px', mx: 'auto' }}>
-                        <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bold' }}>
+                    <StyledStack spacing={3}>
+                        <StyledRecipeDetailBox>
+                        <Typography variant="h6">
                             Title of Recipe - {recipe?.title || 'Untitled'}
                         </Typography>
 
-                        <Typography
-                            variant="body1"
-                            color="text.secondary"
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <Rating
+                        <Typography variant="body1" color="text.secondary" className="display">
+                            <StyledRating
                                 value={Math.ceil(recipe?.averageRating || 0)}
-                                sx={{ me: 2 }}
+                                me={2}
                                 readOnly
                             />
                         </Typography>
 
-                        <Typography
-                            variant="body1"
-                            color="text.secondary"
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <AccessTimeIcon sx={{ mr: 1 }} /> Preparation Time -{' '}
+                        <Typography variant="body1" color="text.secondary" className="display">
+                            <StyledAccessTimeIcon /> Preparation Time -{' '}
                             {recipe?.preparationTime || 0} minutes
                         </Typography>
-
+</StyledRecipeDetailBox>
                         {/* Ingredients & Instructions */}
 
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center', // center horizontally
-                                alignItems: 'center', // center vertically
-                                flexDirection: 'column', // stack heading and list vertically
-                                textAlign: 'center', // center text
-                            }}
-                        >
+                        <StyledRecipeDetailBox>
                             {/* Ingredients Heading */}
-                            <Typography
-                                variant="h5"
-                                sx={{
-                                    mb: 2,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <ShoppingCartIcon
-                                    color="warning"
-                                    sx={{
-                                        verticalAlign: 'middle',
-                                        fontSize: '1.2em',
-                                        mr: 1,
-                                    }}
-                                />
+                            <Typography variant="h5" className="display marginBottom">
+                                <StyledShoppingCartIcon color="warning" />
                                 Ingredients:
                             </Typography>
 
                             {/* Ingredients List */}
-                            <List dense sx={{ width: '100%', maxWidth: 360 }}>
+                            <List dense className="imgPreview">
                                 {recipe?.ingredients?.length ? (
                                     recipe.ingredients.map((ingredient, index) => (
                                         <ListItem key={index}>
@@ -174,27 +117,12 @@ const RecipeDetailPage = () => {
                                     </Typography>
                                 )}
                             </List>
-                        </Box>
+                        </StyledRecipeDetailBox>
 
                         {/* Instructions */}
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center', // center horizontally
-                                alignItems: 'center', // center vertically
-                                flexDirection: 'column', // stack heading and list vertically
-                                textAlign: 'center', // center text
-                            }}
-                        >
+                        <StyledRecipeDetailBox>
                             <Typography variant="h5">
-                                <MenuBookIcon
-                                    color="info"
-                                    sx={{
-                                        verticalAlign: 'middle',
-                                        fontSize: '1.2em',
-                                    }}
-                                />{' '}
-                                Instructions:
+                                <StyledMenuBookIcon color="info" /> Instructions:
                             </Typography>
                             <List dense>
                                 {recipe?.steps?.length ? (
@@ -211,38 +139,26 @@ const RecipeDetailPage = () => {
                                     </Typography>
                                 )}
                             </List>
-                        </Box>
+                        </StyledRecipeDetailBox>
 
                         <Divider />
 
                         {/* Ratings Section */}
-                        <Box sx={{
-                                display: 'flex',
-                                justifyContent: 'center', // center horizontally
-                                alignItems: 'center', // center vertically
-                                flexDirection: 'column', // stack heading and list vertically
-                                textAlign: 'center', // center text
-                            }}>
+                        <StyledRecipeDetailBox>
                             <Typography variant="h5">
-                                <StarIcon sx={{ color: '#FF9800' }} /> Ratings:
+                                <StyledStarIcon /> Ratings:
                             </Typography>
                             {ratingsArray.length > 0 ? (
                                 <List dense>
                                     {ratingsArray.map((rating) => (
-                                        <ListItem
-                                            key={rating?._id}
-                                            sx={{
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                            }}
-                                        >
+                                        <StyledListItem key={rating?._id}>
                                             <ListItemText
                                                 primary={
                                                     <Typography>
                                                         {rating?.userId?.username || 'Anonymous'}
-                                                        <Rating
+                                                        <StyledRating
                                                             value={Math.ceil(rating?.rate || 0)}
-                                                            sx={{ me: 2 }}
+                                                            me={2}
                                                             readOnly
                                                         />
                                                     </Typography>
@@ -255,7 +171,7 @@ const RecipeDetailPage = () => {
                                                         : 'Date not available'
                                                 }
                                             />
-                                        </ListItem>
+                                        </StyledListItem>
                                     ))}
                                 </List>
                             ) : (
@@ -263,20 +179,14 @@ const RecipeDetailPage = () => {
                                     No ratings yet.
                                 </Typography>
                             )}
-                        </Box>
+                        </StyledRecipeDetailBox>
 
                         <Divider />
 
                         {/* Comments Section */}
-                        <Box sx={{
-                                display: 'flex',
-                                justifyContent: 'center', // center horizontally
-                                alignItems: 'center', // center vertically
-                                flexDirection: 'column', // stack heading and list vertically
-                                textAlign: 'center', // center text
-                            }}>
+                        <StyledRecipeDetailBox>
                             <Typography variant="h5">
-                                <CommentIcon sx={{ color: '#333', mt: 0.5 }} /> Comments:
+                                <StyledCommentIcon /> Comments:
                             </Typography>
                             {commentsArray.length > 0 ? (
                                 <List dense>
@@ -294,11 +204,11 @@ const RecipeDetailPage = () => {
                                     No comments yet.
                                 </Typography>
                             )}
-                        </Box>
-                    </Stack>
+                        </StyledRecipeDetailBox>
+                    </StyledStack>
                 </Box>
             ) : (
-                <Typography sx={{ textAlign: 'center', mt: 4 }}>Loading...</Typography>
+                <StyledTypographyMargin>Loading...</StyledTypographyMargin>
             )}
         </>
     )

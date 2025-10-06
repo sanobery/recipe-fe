@@ -1,9 +1,15 @@
 import { useState } from 'react'
-import { Button, Typography, TextField, Paper, Box, Snackbar } from '@mui/material'
+import { Button, Typography, TextField, Box, Snackbar } from '@mui/material'
 import { RecipeInputs, Recipe } from '../../../types/RecipeAuthInterface'
 import { useSelector } from 'react-redux'
 import { selectCurrentUserId } from '../../../store/AuthSlice'
 import recipeService from '../../../infrastructure/services/api/recipe/RecipeInstance'
+import {
+    CustomSnackbarContent,
+    StyleBoxContent,
+    StyledPaper,
+    SubmitButton,
+} from '../../styles/styles'
 
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -139,16 +145,15 @@ const EditRecipe = ({ recipe, onBack, handleClose }: EditRecipeProps) => {
                 open={snackbarOpen}
                 autoHideDuration={2000}
                 onClose={() => setSnackbarOpen(false)}
-                message={message}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                ContentProps={{
-                    sx: { backgroundColor: '#FF5722', color: 'white' },
-                }}
-            />
+            >
+                <CustomSnackbarContent message={message} />
+            </Snackbar>
+
             <Button variant="contained" color="secondary" onClick={onBack}>
                 Back to Recipes
             </Button>
-            <Paper elevation={3} sx={{ padding: 3, maxWidth: 600, margin: 'auto', mt: 3 }}>
+            <StyledPaper elevation={3}>
                 <Typography variant="h4" fontWeight="bold" gutterBottom>
                     Edit Recipe
                 </Typography>
@@ -201,23 +206,9 @@ const EditRecipe = ({ recipe, onBack, handleClose }: EditRecipeProps) => {
 
                     <Typography variant="h6">Recipe Image</Typography>
                     {imagePreview && (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                mb: 2,
-                            }}
-                        >
-                            <img
-                                src={imagePreview}
-                                alt="Recipe"
-                                style={{
-                                    width: '100%',
-                                    maxWidth: '400px',
-                                    borderRadius: '8px',
-                                }}
-                            />
-                        </Box>
+                        <StyleBoxContent>
+                            <img src={imagePreview} alt="Recipe" className="imgPreview" />
+                        </StyleBoxContent>
                     )}
                     <input type="file" onChange={handleFileChange} />
 
@@ -233,17 +224,11 @@ const EditRecipe = ({ recipe, onBack, handleClose }: EditRecipeProps) => {
                         required
                     />
 
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        sx={{ mt: 2 }}
-                    >
+                    <SubmitButton type="submit" variant="contained" color="primary" fullWidth>
                         Update Recipe
-                    </Button>
+                    </SubmitButton>
                 </form>
-            </Paper>
+            </StyledPaper>
         </>
     )
 }

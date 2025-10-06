@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Typography, Button, Tooltip, Box } from '@mui/material'
+import { Typography, Tooltip, Box } from '@mui/material'
+import { CustomTypography, StyledButton, StyledRecipeDetailBox } from '../../styles/styles'
 
 interface IngredientListProps {
     ingredients: string[]
@@ -12,13 +13,7 @@ const IngredientList: React.FC<IngredientListProps> = ({ ingredients }) => {
     const ingredient = [ingredients[0] || '\u00A0']
 
     return (
-        <Box sx={{
-    display: 'flex',
-    justifyContent: 'center',      // center horizontally
-    alignItems: 'center',          // center vertically
-    flexDirection: 'column',       // stack heading and list vertically
-    textAlign: 'center',           // center text
-  }}>
+        <StyledRecipeDetailBox>
             <Typography variant="h6" mt={2}>
                 Ingredients
             </Typography>
@@ -28,18 +23,9 @@ const IngredientList: React.FC<IngredientListProps> = ({ ingredients }) => {
                     <>
                         {ingredients.map((ingredient, index) => (
                             <Tooltip key={index} title={ingredient} arrow>
-                                <Typography
-                                    sx={{
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        maxWidth: '200px',
-                                        display: 'block',
-                                        transition: 'all 0.3s ease-in-out',
-                                    }}
-                                >
+                                <CustomTypography>
                                     {index + 1}. {ingredient}
-                                </Typography>
+                                </CustomTypography>
                             </Tooltip>
                         ))}
                     </>
@@ -47,18 +33,9 @@ const IngredientList: React.FC<IngredientListProps> = ({ ingredients }) => {
                     <>
                         {ingredient.map((ingredient, index) => (
                             <Tooltip key={index} title={ingredient} arrow>
-                                <Typography
-                                    sx={{
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        maxWidth: '200px',
-                                        display: 'block',
-                                        transition: 'all 0.3s ease-in-out',
-                                    }}
-                                >
+                                <CustomTypography>
                                     {index + 1}. {ingredient}
-                                </Typography>
+                                </CustomTypography>
                             </Tooltip>
                         ))}
                     </>
@@ -66,15 +43,11 @@ const IngredientList: React.FC<IngredientListProps> = ({ ingredients }) => {
             </Box>
             {/* Show more/less button */}
             <Tooltip title={showFull ? 'Show less' : 'Show more'}>
-                <Button
-                    size="small"
-                    sx={{ minHeight: '24px', mt: 1 }}
-                    onClick={() => setShowFull(!showFull)}
-                >
+                <StyledButton size="small" onClick={() => setShowFull(!showFull)}>
                     ...
-                </Button>
+                </StyledButton>
             </Tooltip>
-        </Box>
+        </StyledRecipeDetailBox>
     )
 }
 

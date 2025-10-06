@@ -2,13 +2,17 @@ import { Box, FormControl, InputLabel, Select, MenuItem, Snackbar } from '@mui/m
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setSearchRecipeByIngredient } from '../../../store/Slice'
-import { styled } from '@mui/material/styles'
-import InputBase from '@mui/material/InputBase'
-import SearchIcon from '@mui/icons-material/Search'
 import { SelectChangeEvent } from '@mui/material'
 import recipeService from '../../../infrastructure/services/api/recipe/RecipeInstance'
 import useSWR from 'swr'
 import { ConstantMessages } from '../../../constants/ConstantMessages'
+import {
+    CustomSnackbarContent,
+    StyledSearchIcon,
+    Search,
+    SearchIconWrapper,
+    StyledInputBase,
+} from '../../styles/styles'
 
 const ingredients = ['None', 'Rating', 'PreparationTime']
 const ratingOptions = [1, 2, 3, 4, 5]
@@ -23,38 +27,6 @@ const timeOptions = [
     '81-90',
     '91-100',
 ]
-
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: '#1976d2',
-    '&:hover': { backgroundColor: '#1565c0' },
-    width: '100%',
-    [theme.breakpoints.up('sm')]: { width: '300px' },
-}))
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}))
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: '#fff',
-    width: '100%',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        [theme.breakpoints.up('sm')]: {
-            width: '12ch',
-            '&:focus': { width: '20ch' },
-        },
-    },
-}))
 
 // =============================================
 // Debounce Hook
@@ -154,12 +126,11 @@ const SearchFilterRecipe = () => {
                 open={snackbarOpen}
                 autoHideDuration={2000}
                 onClose={() => setSnackbarOpen(false)}
-                message={message}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                ContentProps={{
-                    sx: { backgroundColor: '#FF5722', color: 'white' },
-                }}
-            />
+            >
+                <CustomSnackbarContent message={message} />
+            </Snackbar>
+
             <Box
                 display="flex"
                 justifyContent="space-between"
@@ -172,7 +143,7 @@ const SearchFilterRecipe = () => {
             >
                 <Search>
                     <SearchIconWrapper>
-                        <SearchIcon sx={{ color: '#fff' }} />
+                        <StyledSearchIcon />
                     </SearchIconWrapper>
                     <StyledInputBase
                         placeholder="Search by Ingredient"
@@ -183,7 +154,7 @@ const SearchFilterRecipe = () => {
                 </Search>
 
                 <Box display="flex" gap={2} alignItems="center">
-                    <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+                    <FormControl variant="outlined" size="small" className="formWidth">
                         <InputLabel id="filter-by-label">Filter By</InputLabel>
                         <Select
                             labelId="filter-by-label"
@@ -201,7 +172,7 @@ const SearchFilterRecipe = () => {
                     </FormControl>
 
                     {selectedFilter && selectedFilter !== 'none' && (
-                        <FormControl variant="outlined" size="small" sx={{ minWidth: 120 }}>
+                        <FormControl variant="outlined" size="small" className="formWidth">
                             <InputLabel id="select-rating-label">
                                 {selectedFilter === 'rating' ? 'Select Rating' : 'Select Time'}
                             </InputLabel>

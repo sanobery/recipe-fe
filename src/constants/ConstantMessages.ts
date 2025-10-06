@@ -22,6 +22,7 @@ export const ConstantMessages = {
     PASSWORD_SPECIALCASE: 'Password must include one special character.',
     VALID_RATING_COMMENT: 'Please provide a valid rating or comment.',
     NO_RECIPE: 'No Recipes Found.',
+    LOGIN_FIRST: 'Please Login First',
 }
 
 type MessageType = 'required' | 'invalid' | 'success'

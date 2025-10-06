@@ -40,3 +40,49 @@
 .read-the-docs {
     color: #888;
 }
+
+.clickableText {
+    color: blue;
+    cursor: pointer;
+}
+
+.imgPreview {
+    width: '100%';
+    max-width: '400px';
+    border-radius: '8px';
+}
+
+.formWidth {
+    min-width: '120px';
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+.textStyle {
+    font-weight: 'bold';
+    text-align: 'center';
+}
+
+.padding {
+    padding: '24px';
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.display {
+    display: 'flex';
+    align-items: 'center';
+    justify-content: 'center';
+}
+
+.marginBottom {
+    margin-bottom: '16px';
+}

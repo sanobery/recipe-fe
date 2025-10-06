@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { Alert, AlertColor, Modal, Typography, Button, Rating, TextField } from '@mui/material'
+import { Alert, AlertColor, Modal, Typography, TextField } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { selectCurrentUserId } from '../../../store/AuthSlice'
 import { RootState } from '../../../store/Store'
 import recipeService from '../../../infrastructure/services/api/recipe/RecipeInstance'
 import { ConstantMessages } from '../../../constants/ConstantMessages'
-import { ModalBox,ModalContent } from '../../styles/styles'
+import { ModalBox, ModalContent, StyledRating, SubmitButton } from '../../styles/styles'
 interface RateCommentProps {
     open: boolean
     onClose: () => void
@@ -92,10 +92,10 @@ const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {
                                 name="rate"
                                 control={control}
                                 render={({ field }) => (
-                                    <Rating
+                                    <StyledRating
                                         {...field}
                                         onChange={(_, newValue) => field.onChange(newValue)}
-                                        sx={{ mt: 2 }}
+                                        mt={2}
                                     />
                                 )}
                             />
@@ -120,24 +120,23 @@ const RateComment: React.FC<RateCommentProps> = ({ open, onClose, type }) => {
                         )}
 
                         <div>
-                            <Button
+                            <SubmitButton
                                 type="submit"
                                 variant="contained"
                                 size="small"
                                 color="primary"
-                                sx={{ mt: 3 }}
                             >
                                 Submit
-                            </Button>
-                            <Button
+                            </SubmitButton>
+                            <SubmitButton
                                 variant="contained"
                                 color="error"
                                 size="small"
                                 onClick={onClose}
-                                sx={{ mt: 3, mx: 2 }}
+                                marginX={16}
                             >
                                 Close
-                            </Button>
+                            </SubmitButton>
                         </div>
                     </form>
                 </ModalContent>

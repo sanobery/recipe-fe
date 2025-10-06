@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Alert, AlertColor, TextField, Button, Box, Typography } from '@mui/material'
+import { Alert, AlertColor, TextField, Typography } from '@mui/material'
 import CryptoJS from 'crypto-js'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectCurrentToken, selectCurrentUserId, setUserInfo } from '../../../store/AuthSlice'
@@ -9,6 +9,7 @@ import userService from '../../../infrastructure/services/api/user/UserInstance'
 import { SignupInputs } from '../../../types/RecipeAuthInterface'
 import { ConstantMessages, getMessage } from '../../../constants/ConstantMessages'
 import * as z from 'zod'
+import { ClickableText, StyledBox, SubmitButton } from '../../styles/styles'
 
 // =============================================
 // Define Form Data Type with Zod Schema
@@ -114,17 +115,7 @@ const UserManagement: React.FC<LoginProps> = ({ handleClose, switchToLogin, user
     }, [token, dispatch, setValue])
 
     return (
-        <Box
-            sx={{
-                maxWidth: 400,
-                mx: 'auto',
-                mt: 5,
-                p: 3,
-                boxShadow: 3,
-                borderRadius: 2,
-                bgcolor: 'white',
-            }}
-        >
+        <StyledBox>
             {message && <Alert severity={severity}>{message}</Alert>}
 
             <Typography variant="h5" gutterBottom textAlign="center">
@@ -163,22 +154,18 @@ const UserManagement: React.FC<LoginProps> = ({ handleClose, switchToLogin, user
                     helperText={errors.password?.message}
                 />
 
-                <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
+                <SubmitButton type="submit" variant="contained" color="primary" fullWidth>
                     {userInfoLabels[userInfo]}
-                </Button>
+                </SubmitButton>
             </form>
 
             {userInfo === 'signup' && (
                 <p>
                     Have an account.
-                    <span onClick={switchToLogin} style={{ color: 'blue', cursor: 'pointer' }}>
-                        {' '}
-                        Log-In
-                    </span>{' '}
-                    to continue
+                    <ClickableText onClick={switchToLogin}> Log-In</ClickableText> to continue
                 </p>
             )}
-        </Box>
+        </StyledBox>
     )
 }
 

@@ -46,7 +46,7 @@ const UserRecipe = (props: UserRecipeProps) => {
     }, [dispatch, data])
 
     return (
-        <Box sx={{ p: 3 }}>
+        <Box className="padding">
             <MyRecipeDetail handleClose={props.handleClose} />
         </Box>
     )

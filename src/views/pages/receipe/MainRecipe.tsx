@@ -4,10 +4,10 @@ import recipeService from '../../../infrastructure/services/api/recipe/RecipeIns
 import { RootState } from '../../../store/Store'
 import { useDispatch, useSelector } from 'react-redux'
 import SearchFilterRecipe from './SearchFilterRecipe'
-import { Pagination } from '@mui/material'
 import RecipeSlider from './RecipeSlider'
 import ViewRecipe from './ViewRecipe'
 import { setRecipes } from '../../../store/Slice'
+import { StyledDiv, StyledPageDiv, StyledPagination } from '../../styles/styles'
 
 const MainRecipe = React.memo(() => {
     const dispatch = useDispatch()
@@ -44,23 +44,18 @@ const MainRecipe = React.memo(() => {
         <>
             <SearchFilterRecipe />
             {search && <RecipeSlider />}
-            <div style={{ display: 'flex', width: '100%' }}>
-                <div style={{ flex: 1, transition: '0.3s ease-in-out' }}>
+            <StyledDiv>
+                <StyledPageDiv>
                     <ViewRecipe />
                     {search && (
-                        <Pagination
+                        <StyledPagination
                             count={Math.ceil(totalRecipes / recipesPerPage)}
                             page={page}
                             onChange={handlePageChange}
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                marginTop: 2,
-                            }}
                         />
                     )}
-                </div>
-            </div>
+                </StyledPageDiv>
+            </StyledDiv>
         </>
     )
 })

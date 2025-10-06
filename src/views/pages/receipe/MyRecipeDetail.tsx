@@ -1,35 +1,33 @@
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import 'react-lazy-load-image-component/src/effects/blur.css';
+import 'react-lazy-load-image-component/src/effects/blur.css'
+import { Grid, CardContent, Typography, CardActionArea } from '@mui/material'
+import { RootState } from '../../../store/Store'
+import { useSelector } from 'react-redux'
+import { Recipe } from '../../../types/RecipeAuthInterface'
+import { UserRecipeProps } from '../../../types/RecipeAuthInterface'
+import EditRecipe from './EditRecipe'
+import { useState } from 'react'
+import { ConstantMessages } from '../../../constants/ConstantMessages'
 import {
-    Grid,
-    Card,
-    CardContent,
-    Typography,
-    CardActionArea,
-} from '@mui/material';
-import { RootState } from '../../../store/Store';
-import { useSelector } from 'react-redux';
-import { Recipe } from '../../../types/RecipeAuthInterface';
-import { UserRecipeProps } from '../../../types/RecipeAuthInterface';
-import EditRecipe from './EditRecipe';
-import { useState } from 'react';
-import { ConstantMessages } from '../../../constants/ConstantMessages';
+    StyledCard,
+    StyledGrid,
+    StyledLazyLoadImage,
+    StyledMyRecipe,
+    StyledTypographyMargin,
+} from '../../styles/styles'
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL
 
 const MyRecipeDetail = (props: UserRecipeProps) => {
-    const recipes = useSelector(
-        (state: RootState) => state.recipe.currentUserRecipe
-    );
-    const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+    const recipes = useSelector((state: RootState) => state.recipe.currentUserRecipe)
+    const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null)
 
     const handleBack = () => {
-        setSelectedRecipe(null);
-    };
+        setSelectedRecipe(null)
+    }
 
     const handleEditClick = (recipe: Recipe) => {
-        setSelectedRecipe(recipe);
-    };
+        setSelectedRecipe(recipe)
+    }
 
     return (
         <>
@@ -41,41 +39,16 @@ const MyRecipeDetail = (props: UserRecipeProps) => {
                 />
             ) : (
                 <>
-                    <Typography
-                        variant="h5"
-                        gutterBottom
-                        sx={{ fontWeight: 'bold', textAlign: 'center' }}
-                    >
+                    <Typography variant="h5" gutterBottom className="textStyle">
                         Your Recipes
                     </Typography>
                     {recipes.length > 0 ? (
-                        <Grid container spacing={3}  sx={{ mt: 2, justifyContent: 'center' }}>
+                        <StyledGrid container spacing={3}>
                             {recipes.map((recipe) => (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={6}
-                                    key={recipe._id}
-                                >
-                                    <Card
-                                        sx={{
-                                            maxWidth: '100%',
-                                            
-                                            transition: '0.3s',
-                                            '&:hover': {
-                                                transform: 'scale(1.05)',
-                                            },
-                                            boxShadow: 3,
-                                            borderRadius: 3,
-                                        }}
-                                    >
-                                        <CardActionArea
-                                            onClick={() =>
-                                                handleEditClick(recipe)
-                                            }
-                                        >
-                                            <LazyLoadImage
+                                <Grid item xs={12} sm={12} md={6} key={recipe._id}>
+                                    <StyledCard>
+                                        <CardActionArea onClick={() => handleEditClick(recipe)}>
+                                            <StyledLazyLoadImage
                                                 src={
                                                     recipe?.image
                                                         ? `${API_URL}/uploads/${recipe?.image}`
@@ -84,58 +57,32 @@ const MyRecipeDetail = (props: UserRecipeProps) => {
                                                 height="200px"
                                                 width="550px"
                                                 effect="blur"
-                                                style={{ objectFit: 'cover' }}
                                             />
                                             <CardContent>
-                                                <Typography
-                                                    variant="h6"
-                                                    sx={{
-                                                        fontWeight: 'bold',
-                                                        whiteSpace: 'nowrap',
-                                                        overflow: 'hidden',
-                                                        textOverflow:
-                                                            'ellipsis',
-                                                        display: 'block',
-                                                        maxWidth: '100%',
-                                                        height: 32, // Fixed height for consistency
-                                                    }}
-                                                >
+                                                <StyledMyRecipe variant="h6">
                                                     {recipe.title}
+                                                </StyledMyRecipe>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    Prep Time: {recipe.preparationTime} mins
                                                 </Typography>
-                                                <Typography
-                                                    variant="body2"
-                                                    color="text.secondary"
-                                                >
-                                                    Prep Time:{' '}
-                                                    {recipe.preparationTime}{' '}
-                                                    mins
-                                                </Typography>
-                                                <Typography
-                                                    variant="body2"
-                                                    color="text.secondary"
-                                                >
-                                                    ⭐ {recipe.averageRating} /
-                                                    5
+                                                <Typography variant="body2" color="text.secondary">
+                                                    ⭐ {recipe.averageRating} / 5
                                                 </Typography>
                                             </CardContent>
                                         </CardActionArea>
-                                    </Card>
+                                    </StyledCard>
                                 </Grid>
                             ))}
-                        </Grid>
+                        </StyledGrid>
                     ) : (
-                        <Typography
-                            color="error"
-                            sx={{ textAlign: 'center', mt: 2 }}
-                            aria-label="noRecipe"
-                        >
+                        <StyledTypographyMargin color="error" aria-label="noRecipe">
                             {ConstantMessages.NO_RECIPE}
-                        </Typography>
+                        </StyledTypographyMargin>
                     )}
                 </>
             )}
         </>
-    );
-};
+    )
+}
 
-export default MyRecipeDetail;
+export default MyRecipeDetail

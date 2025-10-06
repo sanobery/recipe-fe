@@ -1,0 +1,21 @@
+name: "Recipe Frontend App"
+
+on:
+    push:
+        branches:
+            - master
+            - Feature/react-query
+
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+
+        steps: 
+            - name: "Setup Node JS"
+              uses: actions/setup-node@v4
+              with: 
+               node-version: "20"
+            
+            - name: "Check Node JS Version"
+              run: node --version
+            
