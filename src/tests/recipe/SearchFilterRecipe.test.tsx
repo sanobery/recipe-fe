@@ -83,7 +83,7 @@ describe('SearchFilterRecipe', () => {
 
     it('shows snackbar on search error', async () => {
         ;(recipeService.search as jest.Mock).mockResolvedValue({
-            error: { message: 'Ingredient not found' },
+            error: { message: 'No Recipes Found' },
         })
 
         render(
@@ -94,9 +94,8 @@ describe('SearchFilterRecipe', () => {
 
         const input = screen.getByPlaceholderText(/search by ingredient/i)
         fireEvent.change(input, { target: { value: 'unknown' } })
-
         await waitFor(() => {
-            expect(screen.getByText(/ingredient not found/i)).toBeInTheDocument()
+            expect(screen.getByText(/No Recipes Found/i)).toBeInTheDocument()
         })
     })
 })
