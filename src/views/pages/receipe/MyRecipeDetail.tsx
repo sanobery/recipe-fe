@@ -45,6 +45,7 @@ const MyRecipeDetail = (props: UserRecipeProps) => {
                     {recipes.length > 0 ? (
                         <StyledGrid container spacing={3}>
                             {recipes.map((recipe) => (
+                                // @ts-ignore
                                 <Grid item xs={12} sm={12} md={6} key={recipe._id}>
                                     <StyledCard>
                                         <CardActionArea onClick={() => handleEditClick(recipe)}>
