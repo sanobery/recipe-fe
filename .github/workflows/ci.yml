@@ -31,8 +31,14 @@ jobs:
             - name: 'list directory'
               run: ls
 
-            - name: 'Run test'
-              run: npm test
+            - name: 'lint test'
+              run: npm run lint
 
             - name: 'Run build'
               run: npm run build
+
+            - name: 'Upload artifacts to be used for deployment'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build
+                  path: /dist

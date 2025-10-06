@@ -1,0 +1,29 @@
+name: 'Recipe Frontend App-Cd'
+
+on:
+    workflow_run:
+        workflows: ['Recipe Frontend App']
+        types:
+            - completed
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        environment: recipe-fe
+        steps:
+            - name: 'Setup Node JS'
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+
+            - name: 'Setup Vercel CLI'
+              run: npm install -g vercel
+
+            - name: 'Download build artifact'
+              uses: actions/download-artifact@v3
+              with:
+                  name: build
+                  path: ./build
+
+            - name: 'Deploy to Vercel'
+              run: vercel --prod --token=${{ secrets.RECIPE_FE }} --confirm --cwd ./build
