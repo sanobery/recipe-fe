@@ -42,3 +42,6 @@ jobs:
               with:
                   name: build
                   path: ./dist
+
+            - name: Notify completion
+              run: echo "Recipe Frontend App completed"
