@@ -13,7 +13,7 @@ const ViewRecipe = React.memo(() => {
         <Grid container spacing={3} justifyContent="center">
             {displayedRecipes.length > 0 ? (
                 displayedRecipes.map((recipe, index) => (
-                    // @ts-ignore
+                    // @ts-expect-error - Grid issue to be neglected
                     <Grid item key={index} xs={12} sm={6} md={6}>
                         <RecipeReviewCard {...recipe} />
                     </Grid>
