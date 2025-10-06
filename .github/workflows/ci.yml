@@ -20,7 +20,7 @@ jobs:
               run: node --version
 
             - name: 'Clone Repository'
-              run: actions/checkout@v2
+              uses: actions/checkout@v2
 
             - name: 'list directory'
               run: ls
